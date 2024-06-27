@@ -64,6 +64,20 @@ export default defineMock([
               },
             },
             {
+              path: "menu66",
+              component: "system/menu66/index",
+              name: "Menu66",
+              meta: {
+                title: "菜单管理66",
+                icon: "menu",
+                hidden: false,
+                roles: ["ADMIN"],
+                keepAlive: true,
+                alwaysShow: false,
+                params: null,
+              },
+            },
+            {
               path: "dept",
               component: "system/dept/index",
               name: "Dept",
