@@ -15,102 +15,125 @@
         :model="formData"
         :rules="formRules"
       >
-        <template v-for="item in formItems" :key="item.prop">
-          <el-form-item
-            v-show="!item.hidden"
-            :label="item.label"
-            :prop="item.prop"
-          >
-            <!-- Label -->
-            <template #label v-if="item.tips">
-              <span>
-                {{ item.label }}
-                <el-tooltip
-                  placement="bottom"
-                  effect="light"
-                  :content="item.tips"
-                  :raw-content="true"
+        <el-row :gutter="20">
+          <template v-for="item in formItems" :key="item.prop">
+            <el-col v-show="!item.hidden" v-bind="item.col">
+              <el-form-item :label="item.label" :prop="item.prop">
+                <!-- Label -->
+                <template #label v-if="item.tips">
+                  <span>
+                    {{ item.label }}
+                    <el-tooltip
+                      placement="bottom"
+                      effect="light"
+                      :content="item.tips"
+                      :raw-content="true"
+                    >
+                      <el-icon style="vertical-align: -0.15em" size="16">
+                        <QuestionFilled />
+                      </el-icon>
+                    </el-tooltip>
+                  </span>
+                </template>
+                <!-- Input 输入框 -->
+                <template
+                  v-if="item.type === 'input' || item.type === undefined"
                 >
-                  <el-icon style="vertical-align: -0.15em" size="16">
-                    <QuestionFilled />
-                  </el-icon>
-                </el-tooltip>
-              </span>
-            </template>
-            <!-- Input 输入框 -->
-            <template v-if="item.type === 'input' || item.type === undefined">
-              <el-input v-model="formData[item.prop]" v-bind="item.attrs" />
-            </template>
-            <!-- Select 选择器 -->
-            <template v-else-if="item.type === 'select'">
-              <el-select v-model="formData[item.prop]" v-bind="item.attrs">
-                <template v-for="option in item.options" :key="option.value">
-                  <el-option v-bind="option" />
+                  <el-input v-model="formData[item.prop]" v-bind="item.attrs" />
                 </template>
-              </el-select>
-            </template>
-            <!-- Radio 单选框 -->
-            <template v-else-if="item.type === 'radio'">
-              <el-radio-group v-model="formData[item.prop]" v-bind="item.attrs">
-                <template v-for="option in item.options" :key="option.value">
-                  <el-radio v-bind="option" />
+                <!-- Select 选择器 -->
+                <template v-else-if="item.type === 'select'">
+                  <el-select v-model="formData[item.prop]" v-bind="item.attrs">
+                    <template
+                      v-for="option in item.options"
+                      :key="option.value"
+                    >
+                      <el-option v-bind="option" />
+                    </template>
+                  </el-select>
                 </template>
-              </el-radio-group>
-            </template>
-            <!-- Checkbox 多选框 -->
-            <template v-else-if="item.type === 'checkbox'">
-              <el-checkbox-group
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              >
-                <template v-for="option in item.options" :key="option.value">
-                  <el-checkbox v-bind="option" />
+                <!-- Radio 单选框 -->
+                <template v-else-if="item.type === 'radio'">
+                  <el-radio-group
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  >
+                    <template
+                      v-for="option in item.options"
+                      :key="option.value"
+                    >
+                      <el-radio v-bind="option" />
+                    </template>
+                  </el-radio-group>
                 </template>
-              </el-checkbox-group>
-            </template>
-            <!-- Input Number 数字输入框 -->
-            <template v-else-if="item.type === 'input-number'">
-              <el-input-number
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
-            </template>
-            <!-- TreeSelect 树形选择 -->
-            <template v-else-if="item.type === 'tree-select'">
-              <el-tree-select
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
-            </template>
-            <!-- DatePicker 日期选择器 -->
-            <template v-else-if="item.type === 'date-picker'">
-              <el-date-picker
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
-            </template>
-            <!-- Text 文本 -->
-            <template v-else-if="item.type === 'text'">
-              <el-text v-bind="item.attrs">{{ formData[item.prop] }}</el-text>
-            </template>
-            <!-- 自定义 -->
-            <template v-else-if="item.type === 'custom'">
-              <slot
-                :name="item.slotName ?? item.prop"
-                :prop="item.prop"
-                :formData="formData"
-                :attrs="item.attrs"
-              >
-              </slot>
-            </template>
-          </el-form-item>
-        </template>
+                <!-- switch 开关 -->
+                <template v-else-if="item.type === 'switch'">
+                  <el-switch
+                    inline-prompt
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  />
+                </template>
+                <!-- Checkbox 多选框 -->
+                <template v-else-if="item.type === 'checkbox'">
+                  <el-checkbox-group
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  >
+                    <template
+                      v-for="option in item.options"
+                      :key="option.value"
+                    >
+                      <el-checkbox v-bind="option" />
+                    </template>
+                  </el-checkbox-group>
+                </template>
+                <!-- Input Number 数字输入框 -->
+                <template v-else-if="item.type === 'input-number'">
+                  <el-input-number
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  />
+                </template>
+                <!-- TreeSelect 树形选择 -->
+                <template v-else-if="item.type === 'tree-select'">
+                  <el-tree-select
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  />
+                </template>
+                <!-- DatePicker 日期选择器 -->
+                <template v-else-if="item.type === 'date-picker'">
+                  <el-date-picker
+                    v-model="formData[item.prop]"
+                    v-bind="item.attrs"
+                  />
+                </template>
+                <!-- Text 文本 -->
+                <template v-else-if="item.type === 'text'">
+                  <el-text v-bind="item.attrs">
+                    {{ formData[item.prop] }}
+                  </el-text>
+                </template>
+                <!-- 自定义 -->
+                <template v-else-if="item.type === 'custom'">
+                  <slot
+                    :name="item.slotName ?? item.prop"
+                    :prop="item.prop"
+                    :formData="formData"
+                    :attrs="item.attrs"
+                  ></slot>
+                </template>
+              </el-form-item>
+            </el-col>
+          </template>
+        </el-row>
       </el-form>
       <!-- 弹窗底部操作按钮 -->
       <template #footer>
         <div>
           <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseModal">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
         </div>
       </template>
     </el-drawer>
@@ -137,106 +160,132 @@
           :model="formData"
           :rules="formRules"
         >
-          <template v-for="item in formItems" :key="item.prop">
-            <el-form-item
-              v-show="!item.hidden"
-              :label="item.label"
-              :prop="item.prop"
-            >
-              <!-- Label -->
-              <template #label v-if="item.tips">
-                <span>
-                  {{ item.label }}
-                  <el-tooltip
-                    placement="bottom"
-                    effect="light"
-                    :content="item.tips"
-                    :raw-content="true"
+          <el-row :gutter="20">
+            <template v-for="item in formItems" :key="item.prop">
+              <el-col v-show="!item.hidden" v-bind="item.col">
+                <el-form-item :label="item.label" :prop="item.prop">
+                  <!-- Label -->
+                  <template #label v-if="item.tips">
+                    <span>
+                      {{ item.label }}
+                      <el-tooltip
+                        placement="bottom"
+                        effect="light"
+                        :content="item.tips"
+                        :raw-content="true"
+                      >
+                        <el-icon style="vertical-align: -0.15em" size="16">
+                          <QuestionFilled />
+                        </el-icon>
+                      </el-tooltip>
+                    </span>
+                  </template>
+                  <!-- Input 输入框 -->
+                  <template
+                    v-if="item.type === 'input' || item.type === undefined"
                   >
-                    <el-icon style="vertical-align: -0.15em" size="16">
-                      <QuestionFilled />
-                    </el-icon>
-                  </el-tooltip>
-                </span>
-              </template>
-              <!-- Input 输入框 -->
-              <template v-if="item.type === 'input' || item.type === undefined">
-                <el-input v-model="formData[item.prop]" v-bind="item.attrs" />
-              </template>
-              <!-- Select 选择器 -->
-              <template v-else-if="item.type === 'select'">
-                <el-select v-model="formData[item.prop]" v-bind="item.attrs">
-                  <template v-for="option in item.options" :key="option.value">
-                    <el-option v-bind="option" />
+                    <el-input
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    />
                   </template>
-                </el-select>
-              </template>
-              <!-- Radio 单选框 -->
-              <template v-else-if="item.type === 'radio'">
-                <el-radio-group
-                  v-model="formData[item.prop]"
-                  v-bind="item.attrs"
-                >
-                  <template v-for="option in item.options" :key="option.value">
-                    <el-radio v-bind="option" />
+                  <!-- Select 选择器 -->
+                  <template v-else-if="item.type === 'select'">
+                    <el-select
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    >
+                      <template
+                        v-for="option in item.options"
+                        :key="option.value"
+                      >
+                        <el-option v-bind="option" />
+                      </template>
+                    </el-select>
                   </template>
-                </el-radio-group>
-              </template>
-              <!-- Checkbox 多选框 -->
-              <template v-else-if="item.type === 'checkbox'">
-                <el-checkbox-group
-                  v-model="formData[item.prop]"
-                  v-bind="item.attrs"
-                >
-                  <template v-for="option in item.options" :key="option.value">
-                    <el-checkbox v-bind="option" />
+                  <!-- Radio 单选框 -->
+                  <template v-else-if="item.type === 'radio'">
+                    <el-radio-group
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    >
+                      <template
+                        v-for="option in item.options"
+                        :key="option.value"
+                      >
+                        <el-radio v-bind="option" />
+                      </template>
+                    </el-radio-group>
                   </template>
-                </el-checkbox-group>
-              </template>
-              <!-- Input Number 数字输入框 -->
-              <template v-else-if="item.type === 'input-number'">
-                <el-input-number
-                  v-model="formData[item.prop]"
-                  v-bind="item.attrs"
-                />
-              </template>
-              <!-- TreeSelect 树形选择 -->
-              <template v-else-if="item.type === 'tree-select'">
-                <el-tree-select
-                  v-model="formData[item.prop]"
-                  v-bind="item.attrs"
-                />
-              </template>
-              <!-- DatePicker 日期选择器 -->
-              <template v-else-if="item.type === 'date-picker'">
-                <el-date-picker
-                  v-model="formData[item.prop]"
-                  v-bind="item.attrs"
-                />
-              </template>
-              <!-- Text 文本 -->
-              <template v-else-if="item.type === 'text'">
-                <el-text v-bind="item.attrs">{{ formData[item.prop] }}</el-text>
-              </template>
-              <!-- 自定义 -->
-              <template v-else-if="item.type === 'custom'">
-                <slot
-                  :name="item.slotName ?? item.prop"
-                  :prop="item.prop"
-                  :formData="formData"
-                  :attrs="item.attrs"
-                >
-                </slot>
-              </template>
-            </el-form-item>
-          </template>
+                  <!-- switch 开关 -->
+                  <template v-else-if="item.type === 'switch'">
+                    <el-switch
+                      inline-prompt
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    />
+                  </template>
+                  <!-- Checkbox 多选框 -->
+                  <template v-else-if="item.type === 'checkbox'">
+                    <el-checkbox-group
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    >
+                      <template
+                        v-for="option in item.options"
+                        :key="option.value"
+                      >
+                        <el-checkbox v-bind="option" />
+                      </template>
+                    </el-checkbox-group>
+                  </template>
+                  <!-- Input Number 数字输入框 -->
+                  <template v-else-if="item.type === 'input-number'">
+                    <el-input-number
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    />
+                  </template>
+                  <!-- TreeSelect 树形选择 -->
+                  <template v-else-if="item.type === 'tree-select'">
+                    <el-tree-select
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    />
+                  </template>
+                  <!-- DatePicker 日期选择器 -->
+                  <template v-else-if="item.type === 'date-picker'">
+                    <el-date-picker
+                      v-model="formData[item.prop]"
+                      v-bind="item.attrs"
+                    />
+                  </template>
+                  <!-- Text 文本 -->
+                  <template v-else-if="item.type === 'text'">
+                    <el-text v-bind="item.attrs">
+                      {{ formData[item.prop] }}
+                    </el-text>
+                  </template>
+                  <!-- 自定义 -->
+                  <template v-else-if="item.type === 'custom'">
+                    <slot
+                      :name="item.slotName ?? item.prop"
+                      :prop="item.prop"
+                      :formData="formData"
+                      :attrs="item.attrs"
+                    ></slot>
+                  </template>
+                </el-form-item>
+              </el-col>
+            </template>
+          </el-row>
         </el-form>
       </el-scrollbar>
       <!-- 弹窗底部操作按钮 -->
       <template #footer>
         <div style="padding-right: var(--el-dialog-padding-primary)">
           <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseModal">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -301,17 +350,17 @@ prepareFuncs.forEach((func) => func());
 
 // 获取表单数据
 function getFormData(key?: string) {
-  return key === undefined ? formData : formData[key] ?? undefined;
+  return key === undefined ? formData : (formData[key] ?? undefined);
 }
 
 // 设置表单值
 function setFormData(data: IObject) {
   for (const key in formData) {
-    if (Object.hasOwn(formData, key) && key in data) {
+    if (formData.hasOwnProperty(key) && key in data) {
       formData[key] = data[key];
     }
   }
-  if (Object.hasOwn(data, pk)) {
+  if (data?.hasOwnProperty(pk)) {
     formData[pk] = data[pk];
   }
 }
@@ -350,15 +399,19 @@ const handleSubmit = useThrottleFn(() => {
         }
         ElMessage.success(msg);
         emit("submitClick");
-        handleCloseModal();
+        handleClose();
       });
     }
   });
 }, 3000);
 
+// 隐藏弹窗
+function handleClose() {
+  modalVisible.value = false;
+}
+
 // 关闭弹窗
 function handleCloseModal() {
-  modalVisible.value = false;
   formRef.value?.resetFields();
   nextTick(() => {
     formRef.value?.clearValidate();

@@ -4,7 +4,9 @@ const MENU_BASE_URL = "/api/v1/menus";
 
 class MenuAPI {
   /**
-   * 获取路由列表
+   * 获取当前用户的路由列表
+   * <p/>
+   * 无需传入角色，后端解析token获取角色自行判断是否拥有路由的权限
    *
    * @returns 路由列表
    */
@@ -34,10 +36,11 @@ class MenuAPI {
    *
    * @returns 菜单下拉数据源
    */
-  static getOptions() {
+  static getOptions(onlyParent?: boolean) {
     return request<any, OptionType[]>({
       url: `${MENU_BASE_URL}/options`,
       method: "get",
+      params: { onlyParent: onlyParent },
     });
   }
 
@@ -45,7 +48,6 @@ class MenuAPI {
    * 获取菜单表单数据
    *
    * @param id 菜单ID
-   * @returns 菜单表单数据
    */
   static getFormData(id: number) {
     return request<any, MenuForm>({
@@ -202,8 +204,6 @@ export interface Meta {
   icon?: string;
   /** 【菜单】是否开启页面缓存 */
   keepAlive?: boolean;
-  /** 拥有路由权限的角色编码 */
-  roles?: string[];
   /** 路由title */
   title?: string;
 }
