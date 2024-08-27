@@ -27,7 +27,7 @@
         <!-- 用户名 -->
         <el-form-item prop="username">
           <div class="input-wrapper">
-            <svg-icon icon-class="user" class="mx-2" />
+            <i-ep-user class="mx-2" />
             <el-input
               ref="username"
               v-model="loginData.username"
@@ -47,7 +47,7 @@
         >
           <el-form-item prop="password">
             <div class="input-wrapper">
-              <svg-icon icon-class="lock" class="mx-2" />
+              <i-ep-lock class="mx-2" />
               <el-input
                 v-model="loginData.password"
                 :placeholder="$t('login.password')"
@@ -91,13 +91,14 @@
           size="large"
           class="w-full"
           @click.prevent="handleLoginSubmit"
-          >{{ $t("login.login") }}
+        >
+          {{ $t("login.login") }}
         </el-button>
 
         <!-- 账号密码提示 -->
         <div class="mt-10 text-sm">
           <span>{{ $t("login.username") }}: admin</span>
-          <span class="ml-4"> {{ $t("login.password") }}: 123456</span>
+          <span class="ml-4">{{ $t("login.password") }}: 123456</span>
         </div>
       </el-form>
     </el-card>
@@ -119,7 +120,7 @@ import { LocationQuery, useRoute } from "vue-router";
 
 // 内部依赖
 import { useSettingsStore, useUserStore } from "@/store";
-import AuthAPI, { LoginData } from "@/api/auth";
+import AuthAPI, { type LoginData } from "@/api/auth";
 import router from "@/router";
 import defaultSettings from "@/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
@@ -155,7 +156,9 @@ const loginFormRef = ref<FormInstance>();
 const loginData = ref<LoginData>({
   username: "admin",
   password: "123456",
-} as LoginData);
+  captchaKey: "",
+  captchaCode: "",
+});
 
 const loginRules = computed(() => {
   return {

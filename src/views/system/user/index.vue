@@ -28,15 +28,16 @@
                 clearable
                 class="!w-[100px]"
               >
-                <el-option label="启用" value="1" />
-                <el-option label="禁用" value="0" />
+                <el-option label="正常" :value="1" />
+                <el-option label="禁用" :value="0" />
               </el-select>
             </el-form-item>
 
             <el-form-item label="创建时间">
               <el-date-picker
+                :editable="false"
                 class="!w-[240px]"
-                v-model="dateTimeRange"
+                v-model="queryParams.createTime"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始时间"
@@ -46,13 +47,14 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="handleQuery"
-                ><i-ep-search />搜索</el-button
-              >
+              <el-button type="primary" @click="handleQuery">
+                <i-ep-search />
+                搜索
+              </el-button>
               <el-button @click="handleResetQuery">
                 <i-ep-refresh />
-                重置</el-button
-              >
+                重置
+              </el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -65,24 +67,30 @@
                   v-hasPerm="['sys:user:add']"
                   type="success"
                   @click="handleOpenDialog()"
-                  ><i-ep-plus />新增</el-button
                 >
+                  <i-ep-plus />
+                  新增
+                </el-button>
                 <el-button
                   v-hasPerm="['sys:user:delete']"
                   type="danger"
                   :disabled="removeIds.length === 0"
                   @click="handleDelete()"
-                  ><i-ep-delete />删除</el-button
                 >
+                  <i-ep-delete />
+                  删除
+                </el-button>
               </div>
               <div>
-                <el-button class="ml-3" @click="handleOpenImportDialog"
-                  ><template #icon><i-ep-upload /></template>导入</el-button
-                >
+                <el-button class="ml-3" @click="handleOpenImportDialog">
+                  <template #icon><i-ep-upload /></template>
+                  导入
+                </el-button>
 
-                <el-button class="ml-3" @click="handleExport"
-                  ><template #icon><i-ep-download /></template>导出</el-button
-                >
+                <el-button class="ml-3" @click="handleExport">
+                  <template #icon><i-ep-download /></template>
+                  导出
+                </el-button>
               </div>
             </div>
           </template>
@@ -98,7 +106,7 @@
               label="编号"
               align="center"
               prop="id"
-              width="100"
+              width="80"
             />
             <el-table-column
               key="username"
@@ -106,12 +114,7 @@
               align="center"
               prop="username"
             />
-            <el-table-column
-              label="用户昵称"
-              width="120"
-              align="center"
-              prop="nickname"
-            />
+            <el-table-column label="用户昵称" align="center" prop="nickname" />
 
             <el-table-column
               label="性别"
@@ -122,7 +125,7 @@
 
             <el-table-column
               label="部门"
-              width="120"
+              width="150"
               align="center"
               prop="deptName"
             />
@@ -133,11 +136,16 @@
               width="120"
             />
 
-            <el-table-column label="状态" align="center" prop="status">
+            <el-table-column
+              label="状态"
+              align="center"
+              prop="status"
+              width="100"
+            >
               <template #default="scope">
-                <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">{{
-                  scope.row.status == 1 ? "启用" : "禁用"
-                }}</el-tag>
+                <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
+                  {{ scope.row.status == 1 ? "正常" : "禁用" }}
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column
@@ -154,24 +162,30 @@
                   size="small"
                   link
                   @click="hancleResetPassword(scope.row)"
-                  ><i-ep-refresh-left />重置密码</el-button
                 >
+                  <i-ep-refresh-left />
+                  重置密码
+                </el-button>
                 <el-button
                   v-hasPerm="['sys:user:edit']"
                   type="primary"
                   link
                   size="small"
                   @click="handleOpenDialog(scope.row.id)"
-                  ><i-ep-edit />编辑</el-button
                 >
+                  <i-ep-edit />
+                  编辑
+                </el-button>
                 <el-button
                   v-hasPerm="['sys:user:delete']"
                   type="danger"
                   link
                   size="small"
                   @click="handleDelete(scope.row.id)"
-                  ><i-ep-delete />删除</el-button
                 >
+                  <i-ep-delete />
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -194,7 +208,6 @@
       append-to-body
       @close="handleCloseDialog"
     >
-      <!-- 用户新增/编辑表单 -->
       <el-form
         ref="userFormRef"
         :model="formData"
@@ -256,10 +269,14 @@
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">禁用</el-radio>
-          </el-radio-group>
+          <el-switch
+            v-model="formData.status"
+            inline-prompt
+            active-text="正常"
+            inactive-text="禁用"
+            :active-value="1"
+            :inactive-value="0"
+          />
         </el-form-item>
       </el-form>
 
@@ -306,17 +323,6 @@ const queryParams = reactive<UserPageQuery>({
   pageSize: 10,
 });
 
-const dateTimeRange = ref("");
-watch(dateTimeRange, (newVal) => {
-  if (newVal) {
-    queryParams.startTime = newVal[0];
-    queryParams.endTime = newVal[1];
-  } else {
-    queryParams.startTime = undefined;
-    queryParams.endTime = undefined;
-  }
-});
-
 /**  用户弹窗对象  */
 const dialog = reactive({
   visible: false,
@@ -358,7 +364,6 @@ function handleQuery() {
   loading.value = true;
   UserAPI.getPage(queryParams)
     .then((data) => {
-      console.log("handleQuery", data);
       pageData.value = data.list;
       total.value = data.total;
     })
@@ -370,11 +375,9 @@ function handleQuery() {
 /** 重置查询 */
 function handleResetQuery() {
   queryFormRef.value.resetFields();
-  dateTimeRange.value = "";
   queryParams.pageNum = 1;
   queryParams.deptId = undefined;
-  queryParams.startTime = undefined;
-  queryParams.endTime = undefined;
+  queryParams.createTime = undefined;
   handleQuery();
 }
 
@@ -392,16 +395,21 @@ function hancleResetPassword(row: { [key: string]: any }) {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
     }
-  ).then(({ value }) => {
-    if (!value || value.length < 6) {
-      // 检查密码是否为空或少于6位
-      ElMessage.warning("密码至少需要6位字符，请重新输入");
-      return false;
+  ).then(
+    ({ value }) => {
+      if (!value || value.length < 6) {
+        // 检查密码是否为空或少于6位
+        ElMessage.warning("密码至少需要6位字符，请重新输入");
+        return false;
+      }
+      UserAPI.resetPassword(row.id, value).then(() => {
+        ElMessage.success("密码重置成功，新密码是：" + value);
+      });
+    },
+    () => {
+      ElMessage.info("已取消重置密码");
     }
-    UserAPI.updatePassword(row.id, value).then(() => {
-      ElMessage.success("密码重置成功，新密码是：" + value);
-    });
-  });
+  );
 }
 
 /**

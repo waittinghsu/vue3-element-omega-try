@@ -16,14 +16,6 @@ const contentConfig: IContentConfig<UserPageQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   indexAction: function (params) {
-    if ("createAt" in params) {
-      const createAt = params.createAt as string[];
-      if (createAt?.length > 1) {
-        params.startTime = createAt[0];
-        params.endTime = createAt[1];
-      }
-      delete params.createAt;
-    }
     return UserAPI.getPage(params);
   },
   deleteAction: UserAPI.deleteByIds,
@@ -82,7 +74,14 @@ const contentConfig: IContentConfig<UserPageQuery> = {
         });
       },
     },
-    { label: "手机号码", align: "center", prop: "mobile", width: 120 },
+    {
+      label: "手机号码",
+      align: "center",
+      prop: "mobile",
+      templet: "custom",
+      slotName: "mobile",
+      width: 150,
+    },
     {
       label: "状态",
       align: "center",
