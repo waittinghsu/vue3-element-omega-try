@@ -138,53 +138,53 @@ const queneMessage = ref(
 let stompClient: Client;
 
 function connectWebSocket() {
-  stompClient = new Client({
-    brokerURL: socketEndpoint.value,
-    connectHeaders: {
-      Authorization: localStorage.getItem(TOKEN_KEY) || "",
-    },
-    debug: (str) => {
-      console.log(str);
-    },
-    onConnect: () => {
-      console.log("连接成功");
-      isConnected.value = true;
-      messages.value.push({
-        sender: "Server",
-        content: "Websocket 已连接",
-        type: "tip",
-      });
-
-      stompClient.subscribe("/topic/notice", (res) => {
-        messages.value.push({
-          sender: "Server",
-          content: res.body,
-        });
-      });
-
-      stompClient.subscribe("/user/queue/greeting", (res) => {
-        const messageData = JSON.parse(res.body) as MessageType;
-        messages.value.push({
-          sender: messageData.sender,
-          content: messageData.content,
-        });
-      });
-    },
-    onStompError: (frame) => {
-      console.error("Broker reported error: " + frame.headers["message"]);
-      console.error("Additional details: " + frame.body);
-    },
-    onDisconnect: () => {
-      isConnected.value = false;
-      messages.value.push({
-        sender: "Server",
-        content: "Websocket 已断开",
-        type: "tip",
-      });
-    },
-  });
-
-  stompClient.activate();
+  // stompClient = new Client({
+  //   brokerURL: socketEndpoint.value,
+  //   connectHeaders: {
+  //     Authorization: localStorage.getItem(TOKEN_KEY) || "",
+  //   },
+  //   debug: (str) => {
+  //     console.log(str);
+  //   },
+  //   onConnect: () => {
+  //     console.log("连接成功");
+  //     isConnected.value = true;
+  //     messages.value.push({
+  //       sender: "Server",
+  //       content: "Websocket 已连接",
+  //       type: "tip",
+  //     });
+  //
+  //     stompClient.subscribe("/topic/notice", (res) => {
+  //       messages.value.push({
+  //         sender: "Server",
+  //         content: res.body,
+  //       });
+  //     });
+  //
+  //     stompClient.subscribe("/user/queue/greeting", (res) => {
+  //       const messageData = JSON.parse(res.body) as MessageType;
+  //       messages.value.push({
+  //         sender: messageData.sender,
+  //         content: messageData.content,
+  //       });
+  //     });
+  //   },
+  //   onStompError: (frame) => {
+  //     console.error("Broker reported error: " + frame.headers["message"]);
+  //     console.error("Additional details: " + frame.body);
+  //   },
+  //   onDisconnect: () => {
+  //     isConnected.value = false;
+  //     messages.value.push({
+  //       sender: "Server",
+  //       content: "Websocket 已断开",
+  //       type: "tip",
+  //     });
+  //   },
+  // });
+  //
+  // stompClient.activate();
 }
 
 function disconnectWebSocket() {

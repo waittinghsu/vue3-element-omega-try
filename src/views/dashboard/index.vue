@@ -393,28 +393,28 @@ const getNoticeLevelTag = (type: number) => {
 let stompClient: Client;
 
 function connectWebSocket() {
-  stompClient = new Client({
-    brokerURL: socketEndpoint.value,
-    connectHeaders: {
-      Authorization: localStorage.getItem(TOKEN_KEY) || "",
-    },
-    debug: (str) => {
-      console.log(str);
-    },
-    onConnect: () => {
-      console.log("连接成功");
-      stompClient.subscribe("/topic/onlineUserCount", (message) => {
-        onlineUserCount.value = JSON.parse(message.body);
-      });
-    },
-    onStompError: (frame) => {
-      console.error("Broker reported error: " + frame.headers["message"]);
-      console.error("Additional details: " + frame.body);
-    },
-    onDisconnect: () => {},
-  });
-
-  stompClient.activate();
+  // stompClient = new Client({
+  //   brokerURL: socketEndpoint.value,
+  //   connectHeaders: {
+  //     Authorization: localStorage.getItem(TOKEN_KEY) || "",
+  //   },
+  //   debug: (str) => {
+  //     console.log(str);
+  //   },
+  //   onConnect: () => {
+  //     console.log("连接成功");
+  //     stompClient.subscribe("/topic/onlineUserCount", (message) => {
+  //       onlineUserCount.value = JSON.parse(message.body);
+  //     });
+  //   },
+  //   onStompError: (frame) => {
+  //     console.error("Broker reported error: " + frame.headers["message"]);
+  //     console.error("Additional details: " + frame.body);
+  //   },
+  //   onDisconnect: () => {},
+  // });
+  //
+  // stompClient.activate();
 }
 
 onMounted(() => {
