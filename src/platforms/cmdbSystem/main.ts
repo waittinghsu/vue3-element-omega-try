@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import setupPlugins from "@/plugins";
-console.log("failed");
+console.log("platform cmdb");
 // 本地SVG图标
 import "virtual:svg-icons-register";
 

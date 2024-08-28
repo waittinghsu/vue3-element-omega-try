@@ -1,6 +1,7 @@
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
+import dynamicHtmlPlugin from "./src/plugins/dynamic-html";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -29,11 +30,11 @@ const __APP_INFO__ = {
   pkg: { name, version, engines, dependencies, devDependencies },
   buildTimestamp: Date.now(),
 };
-
 const pathSrc = resolve(__dirname, "src");
 /**  Vite配置 @see https://cn.vitejs.dev/config */
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
+  const [, platform = ""] = (process.env.npm_lifecycle_event || "").split(":");
   return {
     resolve: {
       alias: {
@@ -74,6 +75,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       vue(),
       // jsx、tsx语法支持
       vueJsx(),
+      dynamicHtmlPlugin(platform),
       // MOCK 服务
       env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
       UnoCSS({
@@ -219,7 +221,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       terserOptions: {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
-          drop_console: true, // 生产环境去除 console
+          drop_console: false, // 生产环境去除 console
           drop_debugger: true, // 生产环境去除 debugger
         },
         format: {
