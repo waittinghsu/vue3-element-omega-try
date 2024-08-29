@@ -9,7 +9,6 @@ class DemoAPI {
    * @returns 路由列表
    */
   static getCost(p: { id: number }) {
-    console.log("omega", 1);
     return request<any, CostVO[]>({
       url: `${DEMO_BASE_URL}/apple/store/cost`,
       method: "get",
