@@ -15,7 +15,7 @@ export function setupPermission() {
 
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
-    const hasToken = localStorage.getItem(TOKEN_KEY);
+    const hasToken = localStorage.getItem(TOKEN_KEY) || true;
 
     if (hasToken) {
       if (to.path === "/login") {
