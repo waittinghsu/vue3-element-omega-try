@@ -143,7 +143,6 @@ function handleToolbarClick(name: string) {
 }
 // 其他操作列
 function handleOperatClick(data: IOperatData) {
-  console.log(data);
   // 重置密码
   if (data.name === "reset_pwd") {
     ElMessageBox.prompt(
