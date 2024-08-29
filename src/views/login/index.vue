@@ -64,26 +64,25 @@
         </el-tooltip>
 
         <!-- 验证码 -->
-        <el-form-item prop="captchaCode">
-          <div class="input-wrapper">
-            <svg-icon icon-class="captcha" class="mx-2" />
-            <el-input
-              v-model="loginData.captchaCode"
-              auto-complete="off"
-              size="large"
-              class="flex-1"
-              :placeholder="$t('login.captchaCode')"
-              @keyup.enter="handleLoginSubmit"
-            />
+        <!--        <el-form-item prop="captchaCode">-->
+        <!--          <div class="input-wrapper">-->
+        <!--            <svg-icon icon-class="captcha" class="mx-2" />-->
+        <!--            <el-input-->
+        <!--              v-model="loginData.captchaCode"-->
+        <!--              auto-complete="off"-->
+        <!--              size="large"-->
+        <!--              class="flex-1"-->
+        <!--              :placeholder="$t('login.captchaCode')"-->
+        <!--              @keyup.enter="handleLoginSubmit"-->
+        <!--            />-->
 
-            <el-image
-              @click="getCaptcha"
-              :src="captchaBase64"
-              class="captcha-image"
-            />
-          </div>
-        </el-form-item>
-
+        <!--            <el-image-->
+        <!--              @click="getCaptcha"-->
+        <!--              :src="captchaBase64"-->
+        <!--              class="captcha-image"-->
+        <!--            />-->
+        <!--          </div>-->
+        <!--        </el-form-item>-->
         <!-- 登录按钮 -->
         <el-button
           :loading="loading"
@@ -181,22 +180,22 @@ const loginRules = computed(() => {
         trigger: "blur",
       },
     ],
-    captchaCode: [
+    /*captchaCode: [
       {
         required: true,
         trigger: "blur",
         message: t("login.message.captchaCode.required"),
       },
-    ],
+    ],*/
   };
 });
 
 /** 获取验证码 */
 function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
+  /*AuthAPI.getCaptcha().then((data) => {
     loginData.value.captchaKey = data.captchaKey;
     captchaBase64.value = data.captchaBase64;
-  });
+  });*/
 }
 
 /** 登录表单提交 */
