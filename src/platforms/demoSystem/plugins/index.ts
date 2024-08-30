@@ -1,7 +1,7 @@
 import { setupDirective } from "@/directive";
 import { setupI18n } from "@/lang";
 import { setupRouter } from "../router";
-import { setupStore } from "@/store";
+import { setupStore } from "../store";
 import type { App } from "vue";
 import { setupElIcons } from "@/plugins/icons";
 import { setupPermission } from "./permission";
