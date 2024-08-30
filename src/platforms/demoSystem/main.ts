@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import setupPlugins from "@/plugins";
+import setupPlugins from "./plugins";
 console.log("platform demo TWT");
 // 本地SVG图标
 import "virtual:svg-icons-register";
