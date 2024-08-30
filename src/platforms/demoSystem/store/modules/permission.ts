@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
-import { constantRoutes } from "@/router";
-import { store } from "@/store";
+import { constantRoutes } from "../../router";
+import { store } from "../../store";
 import MenuAPI, { RouteVO } from "@/api/menu";
 
 const modules = import.meta.glob("../../views/**/**.vue");
@@ -19,6 +19,7 @@ export const usePermissionStore = defineStore("permission", () => {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
       MenuAPI.getRoutes()
         .then((data) => {
+          console.log("generateRoutes", data);
           const dynamicRoutes = transformRoutes(data);
           routes.value = constantRoutes.concat(dynamicRoutes);
           resolve(dynamicRoutes);
@@ -57,7 +58,7 @@ const transformRoutes = (routes: RouteVO[]) => {
   routes.forEach((route) => {
     const tmpRoute = { ...route } as RouteRecordRaw;
     // 顶级目录，替换为 Layout 组件
-    if (tmpRoute.component?.toString() == "Layout") {
+    if (tmpRoute.component?.toString() === "Layout") {
       tmpRoute.component = Layout;
     } else {
       // 其他菜单，根据组件路径动态加载组件
@@ -75,7 +76,7 @@ const transformRoutes = (routes: RouteVO[]) => {
 
     asyncRoutes.push(tmpRoute);
   });
-
+  console.log("asyncRoutes", asyncRoutes);
   return asyncRoutes;
 };
 
