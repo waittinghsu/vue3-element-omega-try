@@ -91,5 +91,37 @@ declare global {
     /** 子列表  */
     children?: OptionType[];
   }
+
+  /** RouteVO，路由对象 */
+  interface RouteBase {
+    /** 子路由列表 */
+    children?: RouteBase[];
+    /** 组件路径 */
+    component?: string;
+    /** 路由属性 */
+    meta?: MetaBase;
+    /** 路由名称 */
+    name?: string;
+    /** 路由路径 */
+    path?: string;
+    /** 跳转链接 */
+    redirect?: string;
+  }
+
+  /** Meta，路由属性 */
+  interface MetaBase {
+    /** 【目录】只有一个子路由是否始终显示 */
+    alwaysShow?: boolean;
+    /** 是否隐藏(true-是 false-否) */
+    hidden?: boolean;
+    /** ICON */
+    icon?: string;
+    /** 【菜单】是否开启页面缓存 */
+    keepAlive?: boolean;
+    /** 路由title */
+    title?: string;
+    /** 看起來是可以帶參數的 */
+    params?: Record<string, any> | null;
+  }
 }
 export {};
