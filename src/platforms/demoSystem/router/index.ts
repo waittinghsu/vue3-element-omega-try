@@ -1,21 +1,21 @@
 import type { App } from "vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-export const Layout = () => import("@/layout/index.vue");
+export const Layout = () => import("../layout/index.vue");
 
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
-  {
-    path: "/redirect",
-    component: Layout,
-    meta: { hidden: true },
-    children: [
-      {
-        path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index.vue"),
-      },
-    ],
-  },
+  // {
+  //   path: "/redirect",
+  //   component: Layout,
+  //   meta: { hidden: true },
+  //   children: [
+  //     {
+  //       path: "/redirect/:path(.*)",
+  //       component: () => import("@/views/redirect/index.vue"),
+  //     },
+  //   ],
+  // },
 
   {
     path: "/login",
@@ -29,19 +29,19 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     redirect: "/dashboard",
     children: [
-      {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
-        // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
-        name: "Dashboard",
-        meta: {
-          title: "dashboard",
-          icon: "homepage",
-          affix: true,
-          keepAlive: true,
-        },
-      },
+      // {
+      //   path: "dashboard",
+      //   component: () => import("@/views/dashboard/index.vue"),
+      //   // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
+      //   // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
+      //   name: "Dashboard",
+      //   meta: {
+      //     title: "dashboard",
+      //     icon: "homepage",
+      //     affix: true,
+      //     keepAlive: true,
+      //   },
+      // },
       {
         path: "401",
         component: () => import("@/views/error/401.vue"),
