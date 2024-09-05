@@ -20,9 +20,7 @@ export const usePermissionStore = defineStore("permission", () => {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
       MenuAPI.getRoutes()
         .then((data) => {
-          console.log("generateRoutes1", data);
-          console.log("demoRoutes", demoRoutes);
-          const dynamicRoutes = transformRoutes(data);
+          const dynamicRoutes = transformRoutes(demoRoutes);
           routes.value = constantRoutes.concat(dynamicRoutes);
           resolve(dynamicRoutes);
         })
@@ -55,7 +53,7 @@ export const usePermissionStore = defineStore("permission", () => {
 /**
  * 转换路由数据为组件
  */
-const transformRoutes = (routes: RouteVO[]) => {
+const transformRoutes = (routes: (RouteVO | RouteBase)[]) => {
   const asyncRoutes: RouteRecordRaw[] = [];
   routes.forEach((route) => {
     const tmpRoute = { ...route } as RouteRecordRaw;
@@ -78,7 +76,7 @@ const transformRoutes = (routes: RouteVO[]) => {
 
     asyncRoutes.push(tmpRoute);
   });
-  console.log("asyncRoutes", asyncRoutes);
+  // console.log("asyncRoutes", asyncRoutes);
   return asyncRoutes;
 };
 
