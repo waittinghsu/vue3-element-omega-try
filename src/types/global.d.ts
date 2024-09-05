@@ -95,7 +95,7 @@ declare global {
   /** RouteVO，路由对象 */
   interface RouteBase {
     /** 子路由列表 */
-    children?: RouteBase[];
+    children: RouteBase[];
     /** 组件路径 */
     component?: string;
     /** 路由属性 */
