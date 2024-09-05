@@ -301,6 +301,8 @@ defineOptions({
   name: "User",
   inheritAttrs: false,
 });
+import DeptTree from "./components/dept-tree.vue";
+import UserImport from "./components/user-import.vue";
 
 import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/user";
 import DeptAPI from "@/api/dept";
