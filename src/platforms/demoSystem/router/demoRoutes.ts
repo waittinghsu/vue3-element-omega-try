@@ -24,6 +24,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
       {
         path: "role",
@@ -37,6 +38,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
       {
         path: "menu",
@@ -50,6 +52,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
       {
         path: "dept",
@@ -63,6 +66,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
       {
         path: "dict",
@@ -76,6 +80,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
     ],
   },
@@ -103,6 +108,7 @@ const demoRoutes: RouteBase[] = [
           alwaysShow: false,
           params: null,
         },
+        children: [],
       },
     ],
   },
