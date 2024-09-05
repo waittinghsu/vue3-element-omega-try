@@ -13,9 +13,23 @@ const demoRoutes: RouteBase[] = [
     },
     children: [
       {
+        path: "demo",
+        component: "system/demo/default-page/index",
+        name: "DemoPage",
+        meta: {
+          title: "測試頁面",
+          icon: "el-icon-User",
+          hidden: false,
+          keepAlive: true,
+          alwaysShow: false,
+          params: null,
+        },
+        children: [],
+      },
+      {
         path: "user",
         component: "system/user/index",
-        name: "User",
+        name: "user",
         meta: {
           title: "用户管理",
           icon: "el-icon-User",
@@ -84,34 +98,34 @@ const demoRoutes: RouteBase[] = [
       },
     ],
   },
-  {
-    path: "/api",
-    component: "Layout",
-    name: "/api",
-    meta: {
-      title: "接口文档",
-      icon: "api",
-      hidden: false,
-      alwaysShow: true,
-      params: null,
-    },
-    children: [
-      {
-        path: "apifox",
-        component: "demo/api/apifox",
-        name: "Apifox",
-        meta: {
-          title: "Apifox",
-          icon: "api",
-          hidden: false,
-          keepAlive: true,
-          alwaysShow: false,
-          params: null,
-        },
-        children: [],
-      },
-    ],
-  },
+  // {
+  //   path: "/api",
+  //   component: "Layout",
+  //   name: "/api",
+  //   meta: {
+  //     title: "接口文档",
+  //     icon: "api",
+  //     hidden: false,
+  //     alwaysShow: true,
+  //     params: null,
+  //   },
+  //   children: [
+  //     {
+  //       path: "apifox",
+  //       component: "demo/api/apifox",
+  //       name: "Apifox",
+  //       meta: {
+  //         title: "Apifox",
+  //         icon: "api",
+  //         hidden: false,
+  //         keepAlive: true,
+  //         alwaysShow: false,
+  //         params: null,
+  //       },
+  //       children: [],
+  //     },
+  //   ],
+  // },
   // {
   //   path: "/doc",
   //   component: "Layout",
@@ -139,74 +153,76 @@ const demoRoutes: RouteBase[] = [
   //     },
   //   ],
   // },
-  // {
-  //   path: "/multi-level",
-  //   component: "Layout",
-  //   name: "/multiLevel",
-  //   meta: {
-  //     title: "多级菜单",
-  //     icon: "cascader",
-  //     hidden: false,
-  //     alwaysShow: true,
-  //     params: null,
-  //   },
-  //   children: [
-  //     {
-  //       path: "multi-level1",
-  //       component: "demo/multi-level/level1",
-  //       name: "MultiLevel1",
-  //       meta: {
-  //         title: "菜单一级",
-  //         icon: "",
-  //         hidden: false,
-  //         alwaysShow: true,
-  //         params: null,
-  //       },
-  //       children: [
-  //         {
-  //           path: "multi-level2",
-  //           component: "demo/multi-level/children/level2",
-  //           name: "MultiLevel2",
-  //           meta: {
-  //             title: "菜单二级",
-  //             icon: "",
-  //             hidden: false,
-  //             alwaysShow: false,
-  //             params: null,
-  //           },
-  //           children: [
-  //             {
-  //               path: "multi-level3-1",
-  //               component: "demo/multi-level/children/children/level3-1",
-  //               name: "MultiLevel31",
-  //               meta: {
-  //                 title: "菜单三级-1",
-  //                 icon: "",
-  //                 hidden: false,
-  //                 keepAlive: true,
-  //                 alwaysShow: false,
-  //                 params: null,
-  //               },
-  //             },
-  //             {
-  //               path: "multi-level3-2",
-  //               component: "demo/multi-level/children/children/level3-2",
-  //               name: "MultiLevel32",
-  //               meta: {
-  //                 title: "菜单三级-2",
-  //                 icon: "",
-  //                 hidden: false,
-  //                 keepAlive: true,
-  //                 alwaysShow: false,
-  //                 params: null,
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    path: "/multi-level",
+    component: "Layout",
+    name: "/multiLevel",
+    meta: {
+      title: "多级菜单",
+      icon: "cascader",
+      hidden: false,
+      alwaysShow: true,
+      params: null,
+    },
+    children: [
+      {
+        path: "multi-level1",
+        component: "demo/multi-level/level1",
+        name: "MultiLevel1",
+        meta: {
+          title: "菜单一级",
+          icon: "",
+          hidden: false,
+          alwaysShow: true,
+          params: null,
+        },
+        children: [
+          {
+            path: "multi-level2",
+            component: "demo/multi-level/children/level2",
+            name: "MultiLevel2",
+            meta: {
+              title: "菜单二级",
+              icon: "",
+              hidden: false,
+              alwaysShow: false,
+              params: null,
+            },
+            children: [
+              {
+                path: "multi-level3-1",
+                component: "demo/multi-level/children/children/level3-1",
+                name: "MultiLevel31",
+                meta: {
+                  title: "菜单三级-1",
+                  icon: "",
+                  hidden: false,
+                  keepAlive: true,
+                  alwaysShow: false,
+                  params: null,
+                },
+                children: [],
+              },
+              {
+                path: "multi-level3-2",
+                component: "demo/multi-level/children/children/level3-2",
+                name: "MultiLevel32",
+                meta: {
+                  title: "菜单三级-2",
+                  icon: "",
+                  hidden: false,
+                  keepAlive: true,
+                  alwaysShow: false,
+                  params: null,
+                },
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
   // {
   //   path: "/component",
   //   component: "Layout",
