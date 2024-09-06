@@ -27,6 +27,9 @@
   }
 }
 
-.search-container .el-form .el-input {
-  width: 16rem !important;
+.search-container .el-form .el-col .el-form-item {
+  width: 100%;
+  .el-input, .el-select  {
+    width: 100%;
+  }
 }
