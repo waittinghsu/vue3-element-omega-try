@@ -1,28 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="search-container">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item prop="keywords" label="关键字">
-          <el-input
-            v-model="queryParams.keywords"
-            placeholder="角色名称"
-            clearable
-            @keyup.enter="handleQuery"
-          />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="handleQuery">
-            <i-ep-search />
-            搜索
-          </el-button>
-          <el-button @click="handleResetQuery">
-            <i-ep-refresh />
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <SearchContainer :choices="choices" @handle-search="handleQuery" />
 
     <el-card shadow="never" class="table-container">
       <template #header>
@@ -225,26 +203,40 @@
 </template>
 
 <script setup lang="ts">
+import SearchContainer from "@/platforms/demoSystem/views/system/demo/default-page/components/SearchContainer.vue";
+
 defineOptions({
   name: "DemoPage",
   inheritAttrs: false,
 });
-
 import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role";
 import MenuAPI from "@/api/menu";
+import {
+  Choices,
+  EmitPayload,
+} from "@/platforms/demoSystem/views/system/demo/default-page/types";
 
-const queryFormRef = ref(ElForm);
 const roleFormRef = ref(ElForm);
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
+const choices = ref<Choices>({
+  status: [
+    { id: 1, name: "正常" },
+    { id: 0, name: "禁用" },
+  ],
+  product: [
+    { id: 562, name: "H800" },
+    { id: 563, name: "T900" },
+  ],
+  user: [
+    { id: 110, name: "omega" },
+    { id: 111, name: "jerome" },
+  ],
+  userDic: {},
+});
 
 const loading = ref(false);
 const ids = ref<number[]>([]);
 const total = ref(0);
-
-const queryParams = reactive<RolePageQuery>({
-  pageNum: 1,
-  pageSize: 10,
-});
 
 // 角色表格数据
 const roleList = ref<RolePageVO[]>();
@@ -285,7 +277,8 @@ const isExpanded = ref(true);
 const parentChildLinked = ref(true);
 
 /** 查询 */
-function handleQuery() {
+function handleQuery({ type, queryParams }: EmitPayload) {
+  console.log(type, queryParams);
   loading.value = true;
   RoleAPI.getPage(queryParams)
     .then((data) => {
@@ -299,9 +292,8 @@ function handleQuery() {
 
 /** 重置查询 */
 function handleResetQuery() {
-  queryFormRef.value.resetFields();
-  queryParams.pageNum = 1;
-  handleQuery();
+  // queryFormRef.value.resetFields();
+  // handleQuery();
 }
 
 /** 行复选框选中记录选中ID集合 */
@@ -472,6 +464,6 @@ function handleparentChildLinkedChange(val: any) {
 }
 
 onMounted(() => {
-  handleQuery();
+  // handleQuery();
 });
 </script>
