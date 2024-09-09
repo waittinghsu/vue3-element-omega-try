@@ -1,7 +1,11 @@
 <template>
   <div class="app-container">
-    <SearchContainer :choices="choices" @handle-search="handleQuery" />
-
+    <SearchContainer
+      v-model:list-query="queryParams"
+      :choices="choices"
+      @handle-search="handleQuery"
+    />
+    {{ queryParams }}
     <el-card shadow="never" class="table-container">
       <template #header>
         <el-button type="success" @click="handleOpenDialog()">
@@ -72,8 +76,8 @@
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
+        v-model:page="pageNum"
+        v-model:limit="pageSize"
         @pagination="handleQuery"
       />
     </el-card>
@@ -209,13 +213,22 @@ defineOptions({
   name: "DemoPage",
   inheritAttrs: false,
 });
+
 import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role";
 import MenuAPI from "@/api/menu";
 import {
   Choices,
   EmitPayload,
+  type QueryParams,
 } from "@/platforms/demoSystem/views/system/demo/default-page/types";
 
+const queryParams: QueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  keywords: "",
+  group: null,
+  status: null,
+});
 const roleFormRef = ref(ElForm);
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
 const choices = ref<Choices>({
@@ -231,12 +244,18 @@ const choices = ref<Choices>({
     { id: 110, name: "omega" },
     { id: 111, name: "jerome" },
   ],
+  group: [
+    { id: 100, name: "SA" },
+    { id: 101, name: "PH" },
+  ],
   userDic: {},
 });
 
 const loading = ref(false);
 const ids = ref<number[]>([]);
 const total = ref(0);
+const pageNum = ref(1);
+const pageSize = ref(20);
 
 // 角色表格数据
 const roleList = ref<RolePageVO[]>();
@@ -277,10 +296,10 @@ const isExpanded = ref(true);
 const parentChildLinked = ref(true);
 
 /** 查询 */
-function handleQuery({ type, queryParams }: EmitPayload) {
-  console.log(type, queryParams);
+function handleQuery({ type, listQuery }: EmitPayload) {
+  console.log(type, listQuery);
   loading.value = true;
-  RoleAPI.getPage(queryParams)
+  RoleAPI.getPage(listQuery)
     .then((data) => {
       roleList.value = data.list;
       total.value = data.total;
