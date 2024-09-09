@@ -2,7 +2,7 @@
   <div class="search-container">
     <el-form ref="queryFormRef" :model="listQueryProxy" :inline="true">
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item prop="keywords" label="关键字">
             <el-input
               v-model="listQueryProxy.keywords"
@@ -12,7 +12,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="状态" prop="status">
             <el-select
               v-model="listQueryProxy.status"
@@ -20,7 +20,7 @@
               clearable
             >
               <el-option
-                v-for="option in choices.status"
+                v-for="option in choices!.status"
                 :key="option.id"
                 :label="option.name"
                 :value="option.id"
@@ -48,20 +48,18 @@
 <script setup lang="ts">
 import { QueryType } from "../types";
 import type { Choices, QueryParams, EmitPayload } from "../types";
+import {
+  searchDefaultProps,
+  useListQueryProxy,
+} from "@/Mixins/useSearchComposable";
 
 defineOptions({
   name: "SearchContainer",
   inheritAttrs: false,
 });
+
 const { listQuery, choices } = defineProps({
-  listQuery: {
-    type: Object as () => QueryParams,
-    required: true,
-  },
-  choices: {
-    type: Object as () => Choices,
-    required: true,
-  },
+  ...searchDefaultProps<Choices, QueryParams>(),
 });
 
 const emit = defineEmits<{
@@ -70,12 +68,10 @@ const emit = defineEmits<{
   // (e: "handlePageChange", payload: { value: object }): void;
 }>();
 
-const listQueryProxy = computed<QueryParams>({
-  get: () => listQuery,
-  set: (value: QueryParams) => {
-    emit("update:listQuery", value);
-  },
-});
+const listQueryProxy = useListQueryProxy(
+  listQuery as unknown as QueryParams,
+  emit
+);
 
 const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
 
