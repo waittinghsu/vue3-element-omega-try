@@ -13,6 +13,7 @@ export interface ChoiceBaseItem {
 export type Choices = {
   status: ChoiceBaseItem[];
   product: ChoiceBaseItem[];
+  group: ChoiceBaseItem[];
   user: ChoiceBaseItem[];
   userDic: Record<string, string>;
 };
@@ -21,10 +22,11 @@ export interface QueryParams {
   pageNum: number;
   pageSize: number;
   keywords: string;
+  group: number;
   status: string;
 }
 
 export interface EmitPayload {
   type: QueryType;
-  queryParams: QueryParams;
+  listQuery: QueryParams;
 }
