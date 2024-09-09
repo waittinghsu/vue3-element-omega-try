@@ -22,8 +22,8 @@ export interface QueryParams {
   pageNum: number;
   pageSize: number;
   keywords: string;
-  group: number;
-  status: string;
+  group: number | null;
+  status: number | null;
 }
 
 export interface EmitPayload {
