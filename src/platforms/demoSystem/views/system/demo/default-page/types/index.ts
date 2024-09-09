@@ -1,4 +1,5 @@
 // types/index.ts
+import { BaseQuery } from "@/Mixins/useSearchComposable";
 
 export enum QueryType {
   Search = "search",
@@ -18,12 +19,10 @@ export type Choices = {
   userDic: Record<string, string>;
 };
 
-export interface QueryParams {
-  pageNum: number;
-  pageSize: number;
-  keywords: string;
-  group: number | null;
-  status: number | null;
+export interface QueryParams extends BaseQuery {
+  keywords?: string;
+  group?: number | null;
+  status?: number | null;
 }
 
 export interface EmitPayload {

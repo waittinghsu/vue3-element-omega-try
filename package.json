@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "dev:demo": "cross-env PLATFORM=demoSystem vite",
     "dev:cmdb": "cross-env PLATFORM=cmdbSystem vite",
     "build": "vue-tsc --noEmit & vite build",

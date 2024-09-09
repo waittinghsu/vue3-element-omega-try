@@ -224,11 +224,13 @@ import {
 
 const queryParams: QueryParams = reactive({
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 20,
+  total: 0,
   keywords: "",
-  group: null,
-  status: null,
+  group: undefined,
+  status: undefined,
 });
+
 const roleFormRef = ref(ElForm);
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
 const choices = ref<Choices>({
