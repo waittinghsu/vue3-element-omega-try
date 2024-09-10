@@ -29,7 +29,7 @@ export const searchContainerProps = <
       ({
         pageNum: 1,
         pageSize: 10,
-        // ...({} as Omit<TQueryParams, keyof PageQuery>),
+        ...({} as Omit<TQueryParams, keyof PageQuery>),
       }) as TQueryParams,
   },
   choices: {
