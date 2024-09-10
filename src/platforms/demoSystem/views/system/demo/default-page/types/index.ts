@@ -1,6 +1,3 @@
-// types/index.ts
-import { BaseQuery } from "@/Mixins/useSearchComposable";
-
 export enum QueryType {
   Search = "search",
   Reset = "reset",
@@ -10,7 +7,7 @@ export interface ChoiceBaseItem {
   id: string | number;
   name: string;
 }
-
+// 這裡是Choices根據需求修改添加
 export type Choices = {
   status: ChoiceBaseItem[];
   product: ChoiceBaseItem[];
@@ -18,8 +15,8 @@ export type Choices = {
   user: ChoiceBaseItem[];
   userDic: Record<string, string>;
 };
-
-export interface QueryParams extends BaseQuery {
+// 這裡是搜尋條件根據需求修改添加
+export interface QueryParams extends PageQuery {
   keywords?: string;
   group?: number | null;
   status?: number | null;
