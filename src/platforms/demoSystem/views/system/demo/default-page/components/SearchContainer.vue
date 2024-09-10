@@ -62,11 +62,11 @@ defineOptions({
 
 import { QueryType } from "../types";
 import type { Choices, QueryParams, EmitPayload } from "../types";
-import type { EmitsDefaultOptions } from "@/Mixins/useSearchComposable";
+import type { EmitsDefaultOptions } from "@/mixins/useSearchComposable";
 import {
   searchDefaultProps,
   useListQueryProxy,
-} from "@/Mixins/useSearchComposable";
+} from "@/mixins/useSearchComposable";
 const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
 
 const { listQuery, choices } = defineProps({
