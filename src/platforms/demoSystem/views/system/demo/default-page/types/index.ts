@@ -7,6 +7,7 @@ export interface ChoiceBaseItem {
   id: string | number;
   name: string;
 }
+
 // 這裡是Choices根據需求修改添加
 export type Choices = {
   status: ChoiceBaseItem[];
@@ -20,9 +21,4 @@ export interface QueryParams extends PageQuery {
   keywords?: string;
   group?: number | null;
   status?: number | null;
-}
-
-export interface EmitPayload {
-  type: QueryType;
-  listQuery: QueryParams;
 }

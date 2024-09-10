@@ -60,41 +60,32 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import { QueryType } from "../types";
-import type { Choices, QueryParams, EmitPayload } from "../types";
-import type { EmitsDefaultOptions } from "@/mixins/useSearchComposable";
+import type { Choices, QueryParams } from "../types";
+import type { SearchContainerEmits } from "@/mixins/useSearchComposable";
 import {
-  searchDefaultProps,
+  searchContainerProps,
   useListQueryProxy,
+  useSearchComposable,
 } from "@/mixins/useSearchComposable";
+
 const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
 
 const { listQuery, choices } = defineProps({
-  ...searchDefaultProps<Choices, QueryParams>(),
+  ...searchContainerProps<Choices, QueryParams>(),
 });
 
-const emit = defineEmits<EmitsDefaultOptions<EmitPayload, QueryParams>>();
+const emit = defineEmits<SearchContainerEmits<QueryParams>>();
 
 const listQueryProxy = useListQueryProxy(
   listQuery as unknown as QueryParams,
   emit
 );
 
-function handleQuery() {
-  emit("handleSearch", {
-    type: QueryType.Search,
-    listQuery: listQueryProxy.value,
-  });
-}
-
-function handleResetQuery() {
-  queryFormRef.value?.resetFields();
-  listQueryProxy.value.pageNum = 1;
-  emit("handleSearch", {
-    type: QueryType.Reset,
-    listQuery: listQueryProxy.value,
-  });
-}
+const { handleQuery, handleResetQuery } = useSearchComposable(
+  listQueryProxy,
+  emit,
+  queryFormRef
+);
 </script>
 
 <style scoped lang="scss"></style>
