@@ -1,52 +1,39 @@
-import { PropType, computed } from "vue";
+import { PropType, computed, defineEmits } from "vue";
 
-export interface BaseQuery {
-  pageNum: number;
-  pageSize: number;
-  total: number;
+export interface EmitsDefaultOptions<TEmitPayload, TQueryParams> {
+  (e: "handleSearch", payload: TEmitPayload): void;
+  (e: "update:listQuery", payload: TQueryParams): void;
+  // (e: "handlePageChange", payload: { value: object }): void;
 }
 
-export const searchDefaultProps = <C, Q extends BaseQuery>() => ({
+export const searchDefaultProps = <
+  TChoices,
+  TQueryParams extends PageQuery,
+>() => ({
   listQuery: {
-    type: Object as () => PropType<Q>,
+    type: Object as () => PropType<TQueryParams>,
     required: true,
-    default: (): Q =>
+    default: (): TQueryParams =>
       ({
         pageNum: 1,
         pageSize: 10,
-        total: 0,
-        ...({} as Omit<Q, keyof BaseQuery>),
-      }) as Q,
+        ...({} as Omit<TQueryParams, keyof PageQuery>),
+      }) as TQueryParams,
   },
   choices: {
-    type: Object as PropType<C>,
+    type: Object as PropType<TChoices>,
     required: true,
   },
 });
 
-export const useListQueryProxy = <Q extends BaseQuery>(
-  listQuery: Q,
-  emit: (event: "update:listQuery", payload: Q) => void
+export const useListQueryProxy = <TQueryParams extends PageQuery>(
+  listQuery: TQueryParams,
+  emit: (event: "update:listQuery", payload: TQueryParams) => void
 ) => {
-  return computed<Q>({
+  return computed<TQueryParams>({
     get: () => listQuery,
-    set: (value: Q) => {
+    set: (value: TQueryParams) => {
       emit("update:listQuery", value);
     },
   });
 };
-
-// // 將 computed 邏輯封裝在一個函數中，供其他組件使用
-// export const useComputedListQueryProxy = <Q>(props) => {
-//   return computed(() => `Hello, ${props.message}`);
-// };
-//
-// // 將 method 封裝在一個函數中，供其他組件使用
-// export const handleSubmit = (props, emit) => {
-//   const submit = () => {
-//     emit("customEvent", props.message);
-//   };
-//   return {
-//     submit,
-//   };
-// };
