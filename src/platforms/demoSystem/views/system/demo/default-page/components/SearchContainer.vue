@@ -35,9 +35,18 @@
             <i-ep-search />
             搜索
           </el-button>
-          <el-button class="mr-4" @click="handleResetQuery">
+          <el-button class="" type="primary" plain @click="handleResetQuery">
             <i-ep-refresh />
             重置
+          </el-button>
+          <el-button
+            class="mr-4"
+            type="success"
+            plain
+            @click="handleResetQuery"
+          >
+            <i-ep-refresh-left />
+            刷新
           </el-button>
         </el-form-item>
       </el-col>
@@ -46,34 +55,30 @@
 </template>
 
 <script setup lang="ts">
-import { QueryType } from "../types";
-import type { Choices, QueryParams, EmitPayload } from "../types";
-import {
-  searchDefaultProps,
-  useListQueryProxy,
-} from "@/Mixins/useSearchComposable";
-
 defineOptions({
   name: "SearchContainer",
   inheritAttrs: false,
 });
 
+import { QueryType } from "../types";
+import type { Choices, QueryParams, EmitPayload } from "../types";
+import type { EmitsDefaultOptions } from "@/Mixins/useSearchComposable";
+import {
+  searchDefaultProps,
+  useListQueryProxy,
+} from "@/Mixins/useSearchComposable";
+const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
+
 const { listQuery, choices } = defineProps({
   ...searchDefaultProps<Choices, QueryParams>(),
 });
 
-const emit = defineEmits<{
-  (e: "handleSearch", payload: EmitPayload): void;
-  (e: "update:listQuery", payload: QueryParams): void;
-  // (e: "handlePageChange", payload: { value: object }): void;
-}>();
+const emit = defineEmits<EmitsDefaultOptions<EmitPayload, QueryParams>>();
 
 const listQueryProxy = useListQueryProxy(
   listQuery as unknown as QueryParams,
   emit
 );
-
-const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
 
 function handleQuery() {
   emit("handleSearch", {
