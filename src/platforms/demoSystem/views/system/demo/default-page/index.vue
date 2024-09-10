@@ -29,9 +29,15 @@
         highlight-current-row
         border
         @selection-change="handleSelectionChange"
+        @sort-change="handleSortChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="角色名称" prop="name" min-width="100" />
+        <el-table-column
+          label="角色名称"
+          prop="name"
+          min-width="100"
+          sortable
+        />
         <el-table-column label="角色编码" prop="code" width="150" />
         <el-table-column label="状态" align="center" width="100">
           <template #default="scope">
@@ -78,7 +84,7 @@
         v-model:total="total"
         v-model:page="pageNum"
         v-model:limit="pageSize"
-        @pagination="handleQuery"
+        @pagination="handlePageChange"
       />
     </el-card>
 
@@ -218,14 +224,13 @@ import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role";
 import MenuAPI from "@/api/menu";
 import {
   Choices,
-  EmitPayload,
   type QueryParams,
 } from "@/platforms/demoSystem/views/system/demo/default-page/types";
+import type { EmitPayload } from "@/mixins/useSearchComposable";
 
 const queryParams: QueryParams = reactive({
   pageNum: 1,
   pageSize: 20,
-  total: 0,
   keywords: "",
   group: undefined,
   status: undefined,
@@ -298,7 +303,7 @@ const isExpanded = ref(true);
 const parentChildLinked = ref(true);
 
 /** 查询 */
-function handleQuery({ type, listQuery }: EmitPayload) {
+function handleQuery({ type, listQuery }: EmitPayload<QueryParams>) {
   console.log(type, listQuery);
   loading.value = true;
   RoleAPI.getPage(listQuery)
@@ -312,9 +317,8 @@ function handleQuery({ type, listQuery }: EmitPayload) {
 }
 
 /** 重置查询 */
-function handleResetQuery() {
-  // queryFormRef.value.resetFields();
-  // handleQuery();
+function handleResetQuery({ type, listQuery }: EmitPayload<QueryParams>) {
+  handleQuery({ type, listQuery });
 }
 
 /** 行复选框选中记录选中ID集合 */
@@ -322,6 +326,13 @@ function handleSelectionChange(selection: any) {
   ids.value = selection.map((item: any) => item.id);
 }
 
+function handleSortChange(params) {
+  console.log("handleSortChange", params);
+}
+
+function handlePageChange(params) {
+  console.log("handlePageChange", params);
+}
 /** 打开角色弹窗 */
 function handleOpenDialog(roleId?: number) {
   dialog.visible = true;
@@ -346,7 +357,7 @@ function handleSubmit() {
           .then(() => {
             ElMessage.success("修改成功");
             handleCloseDialog();
-            handleResetQuery();
+            // handleResetQuery();
           })
           .finally(() => (loading.value = false));
       } else {
@@ -354,7 +365,7 @@ function handleSubmit() {
           .then(() => {
             ElMessage.success("新增成功");
             handleCloseDialog();
-            handleResetQuery();
+            // handleResetQuery();
           })
           .finally(() => (loading.value = false));
       }
