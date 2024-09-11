@@ -14,6 +14,7 @@ declare global {
   interface PageQuery {
     pageNum: number;
     pageSize: number;
+    ordering?: string;
   }
 
   /**
