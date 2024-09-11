@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-    v-model="dialog.visible"
-    :title="dialog.title"
+    v-model="visibleProxy"
+    :title="title"
     width="500px"
     @close="handleCloseDialog"
   >
@@ -59,6 +59,31 @@ defineOptions({
   name: "RoleEditDialog",
   inheritAttrs: false,
 });
+
+const { visible, title } = defineProps({
+  visible: {
+    type: Boolean,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+});
+
+const emit = defineEmits<{
+  (e: "update:visible", value: boolean): void;
+}>();
+
+const visibleProxy = computed({
+  get() {
+    return visible;
+  },
+  set(value) {
+    emit("update:visible", value);
+  },
+});
+
 import { RoleForm } from "@/api/role";
 // 角色表单
 const formData = reactive<RoleForm>({
