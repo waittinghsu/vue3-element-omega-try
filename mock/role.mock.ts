@@ -89,9 +89,20 @@ export default defineMock([
             sort: 2,
             createTime: "2021-03-25 12:39:54",
             updateTime: null,
+            children: [
+              {
+                id: 444,
+                name: "系统管理员1",
+                code: "ADMIN1",
+                status: 1,
+                sort: 2,
+                createTime: "2021-03-25 12:39:54",
+                updateTime: null,
+              },
+            ],
           },
           ...Array(17)
-            .fill(4)
+            .fill(6)
             .map((start, index) => ({
               id: start + index,
               name: `系统管理员${start + index}`,

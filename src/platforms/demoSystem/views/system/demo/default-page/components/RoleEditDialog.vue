@@ -59,8 +59,10 @@ defineOptions({
   name: "RoleEditDialog",
   inheritAttrs: false,
 });
+import { RoleForm } from "@/api/role";
+const roleFormRef = ref(ElForm);
 
-const { visible, title } = defineProps({
+const props = defineProps({
   visible: {
     type: Boolean,
     required: true,
@@ -77,19 +79,18 @@ const emit = defineEmits<{
 
 const visibleProxy = computed({
   get() {
-    return visible;
+    return props.visible;
   },
   set(value) {
     emit("update:visible", value);
   },
 });
 
-import { RoleForm } from "@/api/role";
 // 角色表单
 const formData = reactive<RoleForm>({
   sort: 1,
   status: 1,
-  code: "",
+  code: "omega",
   name: "",
 });
 
@@ -100,8 +101,34 @@ const rules = reactive({
   status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 });
 
-function handleSubmit() {}
-function handleCloseDialog() {}
+function handleSubmit() {
+  roleFormRef.value.validate((valid: any) => {
+    if (valid) {
+      const roleId = formData.id;
+      if (roleId) {
+      } else {
+      }
+    }
+  });
+}
+function handleCloseDialog() {
+  roleFormRef.value.resetFields();
+  roleFormRef.value.clearValidate();
+
+  formData.id = undefined;
+  // formData.sort = 1;
+  // formData.status = 1;
+  setTimeout(() => {
+    visibleProxy.value = false;
+  }, 1000);
+}
+
+function setForm(newFormData: RoleForm) {
+  Object.assign(formData, newFormData);
+}
+
+// 通过 defineExpose 暴露 setForm 方法
+defineExpose({ setForm });
 </script>
 
 <style scoped lang="scss"></style>

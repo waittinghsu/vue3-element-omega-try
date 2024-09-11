@@ -90,7 +90,11 @@
       />
       {{ pageNum }}- {{ pageSize }}
     </el-card>
-
+    <role-edit-dialog
+      ref="roleEditDialogRef"
+      v-model:visible="dialog.visible"
+      :title="dialog.title"
+    />
     <!-- 分配权限弹窗 -->
     <el-drawer
       v-model="assignPermDialogVisible"
@@ -162,7 +166,7 @@
 
 <script setup lang="ts">
 import SearchContainer from "@/platforms/demoSystem/views/system/demo/default-page/components/SearchContainer.vue";
-
+import RoleEditDialog from "@/platforms/demoSystem/views/system/demo/default-page/components/RoleEditDialog.vue";
 defineOptions({
   name: "DemoPage",
   inheritAttrs: false,
@@ -176,6 +180,9 @@ import {
 } from "@/platforms/demoSystem/views/system/demo/default-page/types";
 import { EmitPayload, QueryType } from "@/mixins/useSearchComposable";
 
+type RoleEditDialogInstance = InstanceType<typeof RoleEditDialog>;
+const roleEditDialogRef = ref<RoleEditDialogInstance>();
+
 const queryParams: QueryParams = reactive({
   pageNum: 1,
   pageSize: 20,
@@ -187,7 +194,6 @@ const queryParams: QueryParams = reactive({
 
 const { pageNum, pageSize } = toRefs(queryParams);
 
-const roleFormRef = ref(ElForm);
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
 const choices = ref<Choices>({
   status: [
@@ -271,6 +277,10 @@ function handleOpenDialog(roleId?: number) {
     dialog.title = "修改角色";
     RoleAPI.getFormData(roleId).then((data) => {
       // Object.assign(formData, data);
+      if (roleEditDialogRef.value?.setForm) {
+        console.log(typeof roleEditDialogRef.value);
+        roleEditDialogRef.value.setForm(data);
+      }
     });
   } else {
     dialog.title = "新增角色";
@@ -300,18 +310,6 @@ function handleSubmit() {
   //     }
   //   }
   // });
-}
-
-/** 关闭角色弹窗 */
-function handleCloseDialog() {
-  // dialog.visible = false;
-  //
-  // roleFormRef.value.resetFields();
-  // roleFormRef.value.clearValidate();
-  //
-  // formData.id = undefined;
-  // formData.sort = 1;
-  // formData.status = 1;
 }
 
 /** 删除角色 */

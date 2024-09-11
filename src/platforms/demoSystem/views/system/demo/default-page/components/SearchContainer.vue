@@ -67,7 +67,6 @@ import {
   useListQueryProxy,
   useSearchComposable,
 } from "@/mixins/useSearchComposable";
-
 const queryFormRef = ref<InstanceType<typeof ElForm> | null>(null);
 
 const { listQuery, choices } = defineProps({
