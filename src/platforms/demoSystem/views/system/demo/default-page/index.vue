@@ -3,7 +3,7 @@
     <SearchContainer
       v-model:list-query="queryParams"
       :choices="choices"
-      @handle-search="handleQuery"
+      @handle-search="handleSearch"
     />
     {{ queryParams }}
     <el-card shadow="never" class="table-container">
@@ -26,8 +26,10 @@
         ref="dataTableRef"
         v-loading="loading"
         :data="roleList"
-        highlight-current-row
+        row-key="id"
         border
+        default-expand-all
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         @selection-change="handleSelectionChange"
         @sort-change="handleSortChange"
       >
@@ -40,8 +42,8 @@
         />
         <el-table-column label="角色编码" prop="code" width="150" />
         <el-table-column label="状态" align="center" width="100">
-          <template #default="scope">
-            <el-tag v-if="scope.row.status === 1" type="success">正常</el-tag>
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 1" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
@@ -86,62 +88,8 @@
         v-model:limit="pageSize"
         @pagination="handlePageChange"
       />
+      {{ pageNum }}- {{ pageSize }}
     </el-card>
-
-    <!-- 角色表单弹窗 -->
-    <el-dialog
-      v-model="dialog.visible"
-      :title="dialog.title"
-      width="500px"
-      @close="handleCloseDialog"
-    >
-      <el-form
-        ref="roleFormRef"
-        :model="formData"
-        :rules="rules"
-        label-width="100px"
-      >
-        <el-form-item label="角色名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入角色名称" />
-        </el-form-item>
-
-        <el-form-item label="角色编码" prop="code">
-          <el-input v-model="formData.code" placeholder="请输入角色编码" />
-        </el-form-item>
-
-        <el-form-item label="数据权限" prop="dataScope">
-          <el-select v-model="formData.dataScope">
-            <el-option :key="0" label="全部数据" :value="0" />
-            <el-option :key="1" label="部门及子部门数据" :value="1" />
-            <el-option :key="2" label="本部门数据" :value="2" />
-            <el-option :key="3" label="本人数据" :value="3" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">停用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            controls-position="right"
-            :min="0"
-            style="width: 100px"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
-        </div>
-      </template>
-    </el-dialog>
 
     <!-- 分配权限弹窗 -->
     <el-drawer
@@ -226,15 +174,18 @@ import {
   Choices,
   type QueryParams,
 } from "@/platforms/demoSystem/views/system/demo/default-page/types";
-import type { EmitPayload } from "@/mixins/useSearchComposable";
+import { EmitPayload, QueryType } from "@/mixins/useSearchComposable";
 
 const queryParams: QueryParams = reactive({
   pageNum: 1,
   pageSize: 20,
   keywords: "",
+  dept: undefined,
   group: undefined,
   status: undefined,
 });
+
+const { pageNum, pageSize } = toRefs(queryParams);
 
 const roleFormRef = ref(ElForm);
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
@@ -261,8 +212,6 @@ const choices = ref<Choices>({
 const loading = ref(false);
 const ids = ref<number[]>([]);
 const total = ref(0);
-const pageNum = ref(1);
-const pageSize = ref(20);
 
 // 角色表格数据
 const roleList = ref<RolePageVO[]>();
@@ -273,20 +222,6 @@ const menuPermOptions = ref<OptionType[]>([]);
 const dialog = reactive({
   title: "",
   visible: false,
-});
-// 角色表单
-const formData = reactive<RoleForm>({
-  sort: 1,
-  status: 1,
-  code: "",
-  name: "",
-});
-
-const rules = reactive({
-  name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
-  code: [{ required: true, message: "请输入角色编码", trigger: "blur" }],
-  dataScope: [{ required: true, message: "请选择数据权限", trigger: "blur" }],
-  status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 });
 
 // 选中的角色
@@ -303,10 +238,10 @@ const isExpanded = ref(true);
 const parentChildLinked = ref(true);
 
 /** 查询 */
-function handleQuery({ type, listQuery }: EmitPayload<QueryParams>) {
-  console.log(type, listQuery);
+function handleSearch({ type }: EmitPayload<QueryParams>) {
+  console.log("handleQuery-queryParams", type, queryParams);
   loading.value = true;
-  RoleAPI.getPage(listQuery)
+  RoleAPI.getPage(queryParams)
     .then((data) => {
       roleList.value = data.list;
       total.value = data.total;
@@ -316,21 +251,17 @@ function handleQuery({ type, listQuery }: EmitPayload<QueryParams>) {
     });
 }
 
-/** 重置查询 */
-function handleResetQuery({ type, listQuery }: EmitPayload<QueryParams>) {
-  handleQuery({ type, listQuery });
-}
-
 /** 行复选框选中记录选中ID集合 */
 function handleSelectionChange(selection: any) {
   ids.value = selection.map((item: any) => item.id);
 }
 
-function handleSortChange(params) {
+function handleSortChange(params: any) {
+  handleSearch({ type: QueryType.Search });
   console.log("handleSortChange", params);
 }
 
-function handlePageChange(params) {
+function handlePageChange(params: any) {
   console.log("handlePageChange", params);
 }
 /** 打开角色弹窗 */
@@ -339,7 +270,7 @@ function handleOpenDialog(roleId?: number) {
   if (roleId) {
     dialog.title = "修改角色";
     RoleAPI.getFormData(roleId).then((data) => {
-      Object.assign(formData, data);
+      // Object.assign(formData, data);
     });
   } else {
     dialog.title = "新增角色";
@@ -348,41 +279,39 @@ function handleOpenDialog(roleId?: number) {
 
 /** 提交角色表单 */
 function handleSubmit() {
-  roleFormRef.value.validate((valid: any) => {
-    if (valid) {
-      loading.value = true;
-      const roleId = formData.id;
-      if (roleId) {
-        RoleAPI.update(roleId, formData)
-          .then(() => {
-            ElMessage.success("修改成功");
-            handleCloseDialog();
-            // handleResetQuery();
-          })
-          .finally(() => (loading.value = false));
-      } else {
-        RoleAPI.add(formData)
-          .then(() => {
-            ElMessage.success("新增成功");
-            handleCloseDialog();
-            // handleResetQuery();
-          })
-          .finally(() => (loading.value = false));
-      }
-    }
-  });
+  // roleFormRef.value.validate((valid: any) => {
+  //   if (valid) {
+  //     loading.value = true;
+  //     const roleId = formData.id;
+  //     if (roleId) {
+  //       RoleAPI.update(roleId, formData)
+  //         .then(() => {
+  //           ElMessage.success("修改成功");
+  //           handleCloseDialog();
+  //         })
+  //         .finally(() => (loading.value = false));
+  //     } else {
+  //       RoleAPI.add(formData)
+  //         .then(() => {
+  //           ElMessage.success("新增成功");
+  //           handleCloseDialog();
+  //         })
+  //         .finally(() => (loading.value = false));
+  //     }
+  //   }
+  // });
 }
 
 /** 关闭角色弹窗 */
 function handleCloseDialog() {
-  dialog.visible = false;
-
-  roleFormRef.value.resetFields();
-  roleFormRef.value.clearValidate();
-
-  formData.id = undefined;
-  formData.sort = 1;
-  formData.status = 1;
+  // dialog.visible = false;
+  //
+  // roleFormRef.value.resetFields();
+  // roleFormRef.value.clearValidate();
+  //
+  // formData.id = undefined;
+  // formData.sort = 1;
+  // formData.status = 1;
 }
 
 /** 删除角色 */
@@ -403,7 +332,6 @@ function handleDelete(roleId?: number) {
       RoleAPI.deleteByIds(roleIds)
         .then(() => {
           ElMessage.success("删除成功");
-          handleResetQuery();
         })
         .finally(() => (loading.value = false));
     },
@@ -453,7 +381,6 @@ function handleAssignPermSubmit() {
       .then(() => {
         ElMessage.success("分配权限成功");
         assignPermDialogVisible.value = false;
-        handleResetQuery();
       })
       .finally(() => {
         loading.value = false;
