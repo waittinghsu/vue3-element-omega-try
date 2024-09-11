@@ -8,7 +8,7 @@ export enum QueryType {
 
 export interface EmitPayload<TQueryParams> {
   type: QueryType;
-  listQuery: TQueryParams;
+  listQuery?: TQueryParams;
 }
 
 export interface SearchContainerEmits<TQueryParams> {
