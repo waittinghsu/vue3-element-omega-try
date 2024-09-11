@@ -20,5 +20,6 @@ export type Choices = {
 export interface QueryParams extends PageQuery {
   keywords?: string;
   group?: number | null;
+  dept?: number | null;
   status?: number | null;
 }
