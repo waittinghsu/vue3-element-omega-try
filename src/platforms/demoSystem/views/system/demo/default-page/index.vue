@@ -93,7 +93,6 @@
     <role-edit-dialog
       ref="roleEditDialogRef"
       v-model:visible="dialog.visible"
-      :title="dialog.title"
     />
     <!-- 分配权限弹窗 -->
     <el-drawer
@@ -165,8 +164,8 @@
 </template>
 
 <script setup lang="ts">
-import SearchContainer from "@/platforms/demoSystem/views/system/demo/default-page/components/SearchContainer.vue";
-import RoleEditDialog from "@/platforms/demoSystem/views/system/demo/default-page/components/RoleEditDialog.vue";
+import SearchContainer from "./components/SearchContainer.vue";
+import RoleEditDialog from "./components/RoleEditDialog.vue";
 defineOptions({
   name: "DemoPage",
   inheritAttrs: false,
@@ -174,10 +173,7 @@ defineOptions({
 
 import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role";
 import MenuAPI from "@/api/menu";
-import {
-  Choices,
-  type QueryParams,
-} from "@/platforms/demoSystem/views/system/demo/default-page/types";
+import { Choices, type QueryParams } from "./types";
 import { EmitPayload, QueryType } from "@/mixins/useSearchComposable";
 
 type RoleEditDialogInstance = InstanceType<typeof RoleEditDialog>;
@@ -226,7 +222,6 @@ const menuPermOptions = ref<OptionType[]>([]);
 
 // 弹窗
 const dialog = reactive({
-  title: "",
   visible: false,
 });
 
@@ -274,17 +269,11 @@ function handlePageChange(params: any) {
 function handleOpenDialog(roleId?: number) {
   dialog.visible = true;
   if (roleId) {
-    dialog.title = "修改角色";
     RoleAPI.getFormData(roleId).then((data) => {
-      // Object.assign(formData, data);
-      if (roleEditDialogRef.value?.setForm) {
-        console.log(typeof roleEditDialogRef.value);
-        roleEditDialogRef.value.setForm(data);
-      }
+      roleEditDialogRef.value?.show({ type: "EDIT", editForm: data });
     });
   } else {
-    dialog.title = "新增角色";
-  }
+    roleEditDialogRef.value?.show({ type: "ADD", editForm: {} });
 }
 
 /** 提交角色表单 */
