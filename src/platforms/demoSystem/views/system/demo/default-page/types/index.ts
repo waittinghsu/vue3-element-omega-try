@@ -1,3 +1,4 @@
+/** index.vue **/
 export enum QueryType {
   Search = "search",
   Reset = "reset",
@@ -23,3 +24,7 @@ export interface QueryParams extends PageQuery {
   dept?: number | null;
   status?: number | null;
 }
+/** edit.vue **/
+export type ShowParams<TForm> =
+  | { type: "ADD"; editForm: {} }
+  | { type: "EDIT"; editForm: Partial<TForm> };
