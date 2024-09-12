@@ -274,6 +274,7 @@ function handleOpenDialog(roleId?: number) {
     });
   } else {
     roleEditDialogRef.value?.show({ type: "ADD", editForm: {} });
+  }
 }
 
 /** 提交角色表单 */
