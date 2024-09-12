@@ -55,27 +55,39 @@
 </template>
 
 <script setup lang="ts">
+import { UnwrapRef } from "vue";
 defineOptions({
   name: "RoleEditDialog",
   inheritAttrs: false,
 });
 import { RoleForm } from "@/api/role";
+import type { ShowParams } from "../types";
 const roleFormRef = ref(ElForm);
+
+const titleTranslationMap = {
+  ADD: "新增角色",
+  EDIT: "修改角色",
+} as const;
+
+type TitleKey = keyof typeof titleTranslationMap;
+
+const emit = defineEmits<{
+  (e: "update:visible", value: boolean): void;
+  (e: "handleSubmit", value: any): void;
+}>();
 
 const props = defineProps({
   visible: {
     type: Boolean,
     required: true,
   },
-  title: {
-    type: String,
-    required: true,
-  },
 });
 
-const emit = defineEmits<{
-  (e: "update:visible", value: boolean): void;
-}>();
+const titleType: Ref<TitleKey> = ref<TitleKey>("ADD");
+
+const title = computed(() => {
+  return titleTranslationMap?.[titleType.value] || "XxxXxxX";
+});
 
 const visibleProxy = computed({
   get() {
@@ -88,10 +100,11 @@ const visibleProxy = computed({
 
 // 角色表单
 const formData = reactive<RoleForm>({
-  sort: 1,
-  status: 1,
   code: "omega",
   name: "",
+  dataScope: undefined,
+  sort: 1,
+  status: 1,
 });
 
 const rules = reactive({
@@ -106,29 +119,55 @@ function handleSubmit() {
     if (valid) {
       const roleId = formData.id;
       if (roleId) {
+        emit("handleSubmit", { type: titleType, data: formData });
       } else {
       }
     }
   });
 }
+
+function setForm(newFormData: Partial<RoleForm>) {
+  // Object.assign(formData, newFormData);
+  Object.keys(formData).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(newFormData, key)) {
+      const newValue = newFormData[key as keyof RoleForm];
+      if (newValue !== undefined) {
+        (formData[
+          key as keyof RoleForm
+        ] as UnwrapRef<RoleForm>[keyof RoleForm]) = newValue;
+      }
+    }
+  });
+}
+
+function show({ type, editForm }: ShowParams<RoleForm>) {
+  titleType.value = type;
+  switch (type) {
+    case "ADD":
+      break;
+    case "EDIT": {
+      const { id } = editForm;
+      Object.assign(formData, { id });
+      setForm(editForm);
+      break;
+    }
+  }
+}
+
 function handleCloseDialog() {
   roleFormRef.value.resetFields();
   roleFormRef.value.clearValidate();
-
   formData.id = undefined;
-  // formData.sort = 1;
-  // formData.status = 1;
+  hide();
+}
+function hide() {
   setTimeout(() => {
     visibleProxy.value = false;
   }, 1000);
 }
 
-function setForm(newFormData: RoleForm) {
-  Object.assign(formData, newFormData);
-}
-
 // 通过 defineExpose 暴露 setForm 方法
-defineExpose({ setForm });
+defineExpose({ setForm, show, hide });
 </script>
 
 <style scoped lang="scss"></style>
