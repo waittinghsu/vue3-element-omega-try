@@ -28,3 +28,7 @@ export interface QueryParams extends PageQuery {
 export type ShowParams<TForm> =
   | { type: "ADD"; editForm: {} }
   | { type: "EDIT"; editForm: Partial<TForm> };
+
+export type SubmitParams<TForm> =
+  | { type: "ADD"; data: TForm }
+  | { type: "EDIT"; data: TForm };
