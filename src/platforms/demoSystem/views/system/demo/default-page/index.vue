@@ -93,6 +93,7 @@
     <role-edit-dialog
       ref="roleEditDialogRef"
       v-model:visible="dialog.visible"
+      @handle-submit="handleSubmit"
     />
     <!-- 分配权限弹窗 -->
     <el-drawer
@@ -173,7 +174,7 @@ defineOptions({
 
 import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role";
 import MenuAPI from "@/api/menu";
-import { Choices, type QueryParams } from "./types";
+import type { Choices, QueryParams, ShowParams } from "./types";
 import { EmitPayload, QueryType } from "@/mixins/useSearchComposable";
 
 type RoleEditDialogInstance = InstanceType<typeof RoleEditDialog>;
@@ -278,28 +279,25 @@ function handleOpenDialog(roleId?: number) {
 }
 
 /** 提交角色表单 */
-function handleSubmit() {
-  // roleFormRef.value.validate((valid: any) => {
-  //   if (valid) {
-  //     loading.value = true;
-  //     const roleId = formData.id;
-  //     if (roleId) {
-  //       RoleAPI.update(roleId, formData)
-  //         .then(() => {
-  //           ElMessage.success("修改成功");
-  //           handleCloseDialog();
-  //         })
-  //         .finally(() => (loading.value = false));
-  //     } else {
-  //       RoleAPI.add(formData)
-  //         .then(() => {
-  //           ElMessage.success("新增成功");
-  //           handleCloseDialog();
-  //         })
-  //         .finally(() => (loading.value = false));
-  //     }
-  //   }
-  // });
+function handleSubmit({ type, data }: ShowParams<RoleForm>) {
+  switch (type) {
+    case "ADD":
+      RoleAPI.add(data)
+        .then(() => {
+          ElMessage.success("新增成功");
+          roleEditDialogRef.value?.hide();
+        })
+        .finally(() => (loading.value = false));
+      break;
+    case "EDIT":
+      RoleAPI.update(data.id, data)
+        .then(() => {
+          ElMessage.success("修改成功");
+          roleEditDialogRef.value?.hide();
+        })
+        .finally(() => (loading.value = false));
+      break;
+  }
 }
 
 /** 删除角色 */
@@ -411,6 +409,6 @@ function handleparentChildLinkedChange(val: any) {
 }
 
 onMounted(() => {
-  // handleQuery();
+  handleSearch({ type: QueryType.Search });
 });
 </script>
