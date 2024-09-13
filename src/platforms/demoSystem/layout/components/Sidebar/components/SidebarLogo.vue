@@ -7,7 +7,7 @@
 
       <router-link v-else class="wh-full flex-center" to="/">
         <img v-if="settingsStore.sidebarLogo" :src="logo" class="logo-image" />
-        <span class="logo-title"> {{ defaultSettings.title }}</span>
+        <span class="logo-title">{{ defaultSettings.title }}</span>
       </router-link>
     </transition>
   </div>
@@ -26,7 +26,7 @@ defineProps({
   },
 });
 
-const logo = ref(new URL(`../../../../assets/logo.png`, import.meta.url).href);
+const logo = ref(new URL(`@/assets/logo.png`, import.meta.url).href);
 </script>
 
 <style lang="scss" scoped>
