@@ -70,7 +70,7 @@
     <el-dropdown class="nav-action-item" trigger="click">
       <div class="flex-center h100% p10px">
         <img
-          :src="userStore.user.avatar + '?imageView2/1/w/80/h/80'"
+          src="@/assets/images/avatar.png"
           class="rounded-full mr-10px w24px w24px"
         />
         <span>{{ userStore.user.username }}</span>
