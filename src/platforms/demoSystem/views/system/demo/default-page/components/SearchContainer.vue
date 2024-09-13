@@ -39,12 +39,7 @@
             <i-ep-refresh />
             重置
           </el-button>
-          <el-button
-            class="mr-4"
-            type="success"
-            plain
-            @click="handleResetQuery"
-          >
+          <el-button class="mr-4" type="success" plain @click="handleRefresh">
             <i-ep-refresh-left />
             刷新
           </el-button>
@@ -80,7 +75,7 @@ const listQueryProxy = useListQueryProxy(
   emit
 );
 
-const { handleQuery, handleResetQuery } = useSearchComposable(
+const { handleQuery, handleResetQuery, handleRefresh } = useSearchComposable(
   listQueryProxy,
   emit,
   queryFormRef
