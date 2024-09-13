@@ -13,7 +13,7 @@ export interface EmitPayload<TQueryParams> {
 
 export interface SearchContainerEmits<TQueryParams> {
   (e: "handleSearch", payload: EmitPayload<TQueryParams>): void;
-  (e: "handleRefresh", payload: EmitPayload<TQueryParams>): void;
+  (e: "handleRefresh", payload: any): void;
   (e: "update:listQuery", payload: TQueryParams): void;
   // (e: "handlePageChange", payload: { value: object }): void;
 }
@@ -52,7 +52,7 @@ export const useListQueryProxy = <TQueryParams extends PageQuery>(
 
 export const useSearchComposable = <TQueryParams extends PageQuery>(
   listQueryProxy: ReturnType<typeof useListQueryProxy<TQueryParams>>,
-  emit: (event: "handleSearch", payload: EmitPayload<TQueryParams>) => void,
+  emit: SearchContainerEmits<TQueryParams>,
   queryFormRef: { value: InstanceType<typeof ElForm> | null }
 ) => {
   const handleQuery = () => {
@@ -70,8 +70,13 @@ export const useSearchComposable = <TQueryParams extends PageQuery>(
     });
   };
 
+  const handleRefresh = () => {
+    emit("handleRefresh", null);
+  };
+
   return {
     handleQuery,
     handleResetQuery,
+    handleRefresh,
   };
 };
