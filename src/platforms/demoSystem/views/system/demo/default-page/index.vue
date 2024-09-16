@@ -95,12 +95,18 @@
       v-model:visible="dialog.visible"
       @handle-submit="handleSubmit"
     />
+    <role-drawer
+      ref="roleDrawerRef"
+      v-model:visible="assignPermDialogVisible"
+      :menuPermOptions="menuPermOptions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import SearchContainer from "./components/SearchContainer.vue";
 import RoleEditDialog from "./components/RoleEditDialog.vue";
+import RoleDrawer from "./components/RoleDrawer.vue";
 defineOptions({
   name: "DemoPage",
   inheritAttrs: false,
@@ -111,8 +117,11 @@ import MenuAPI from "@/api/menu";
 import { Choices, QueryParams, SubmitParams } from "./types";
 import { EmitPayload, QueryType } from "@/mixins/useSearchComposable";
 
+const assignPermDialogVisible = ref(false);
 type RoleEditDialogInstance = InstanceType<typeof RoleEditDialog>;
 const roleEditDialogRef = ref<RoleEditDialogInstance>();
+type RoleDrawerInstance = InstanceType<typeof RoleDrawer>;
+const roleDrawerRef = ref<RoleDrawerInstance>();
 
 const queryParams: QueryParams = reactive({
   pageNum: 1,
@@ -163,7 +172,6 @@ interface CheckedRole {
   name?: string;
 }
 const checkedRole = ref<CheckedRole>({});
-const assignPermDialogVisible = ref(false);
 /** 查询 */
 function handleSearch({ type }: EmitPayload<QueryParams>) {
   console.log("handleQuery-queryParams", type, queryParams);
@@ -255,29 +263,29 @@ function handleDelete(roleId?: number) {
 /** 打开分配菜单权限弹窗 */
 async function handleOpenAssignPermDialog(row: RolePageVO) {
   const roleId = row.id;
-  console.log(roleId);
-  // if (roleId) {
-  //   assignPermDialogVisible.value = true;
-  //   loading.value = true;
-  //
-  //   checkedRole.value.id = roleId;
-  //   checkedRole.value.name = row.name;
-  //
-  //   // 获取所有的菜单
-  //   menuPermOptions.value = await MenuAPI.getOptions();
-  //
-  //   // 回显角色已拥有的菜单
-  //   RoleAPI.getRoleMenuIds(roleId)
-  //     .then((data) => {
-  //       // const checkedMenuIds = data;
-  //       data.forEach((menuId) =>
-  //         permTreeRef.value!.setChecked(menuId, true, false)
-  //       );
-  //     })
-  //     .finally(() => {
-  //       loading.value = false;
-  //     });
-  // }
+  console.log("roleId", roleId);
+  if (roleId) {
+    assignPermDialogVisible.value = true;
+    loading.value = true;
+
+    checkedRole.value.id = roleId;
+    checkedRole.value.name = row.name;
+
+    // 获取所有的菜单
+    menuPermOptions.value = await MenuAPI.getOptions();
+
+    // 回显角色已拥有的菜单
+    // RoleAPI.getRoleMenuIds(roleId)
+    //   .then((data) => {
+    //     // const checkedMenuIds = data;
+    //     data.forEach((menuId) =>
+    //       permTreeRef.value!.setChecked(menuId, true, false)
+    //     );
+    //   })
+    //   .finally(() => {
+    //     loading.value = false;
+    //   });
+  }
 }
 
 onMounted(() => {
