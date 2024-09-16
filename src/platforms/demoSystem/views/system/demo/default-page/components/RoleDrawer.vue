@@ -74,6 +74,32 @@ defineOptions({
   name: "RoleDrawer",
   inheritAttrs: false,
 });
+
+const emit = defineEmits<{
+  (event: "update:visible"): void;
+}>();
+
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    required: true,
+  },
+  menuPermOptions: {
+    type: Array as PropType<OptionType[]>,
+    required: true,
+    default: () => [],
+  },
+});
+
+const assignPermDialogVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(val) {
+    emit("update:visible", val);
+  },
+});
+
 const permTreeRef = ref<InstanceType<typeof ElTree>>();
 const loading = ref(false);
 const permKeywords = ref("");
@@ -83,8 +109,9 @@ interface CheckedRole {
   id?: number;
   name?: string;
 }
+// const menuPermOptions = ref<OptionType[]>([]);
 const checkedRole = ref<CheckedRole>({});
-const assignPermDialogVisible = ref(false);
+// const assignPermDialogVisible = ref(false);
 
 /** 分配菜单权限提交 */
 function handleAssignPermSubmit() {
