@@ -9,7 +9,7 @@
       <el-input
         v-model="permKeywords"
         clearable
-        class="w-[200px]"
+        class="w-[200px] mr-4"
         placeholder="菜单权限名称"
       >
         <template #prefix>
@@ -69,19 +69,27 @@
 
 <script setup lang="ts">
 import RoleAPI from "@/api/role";
-
 defineOptions({
   name: "RoleDrawer",
   inheritAttrs: false,
 });
 
+interface CheckedRole {
+  id?: number;
+  name?: string;
+}
+
 const emit = defineEmits<{
-  (event: "update:visible"): void;
+  (event: "update:visible", payload: boolean): void;
 }>();
 
 const props = defineProps({
   visible: {
     type: Boolean,
+    required: true,
+  },
+  checkedRole: {
+    type: Object as PropType<CheckedRole>,
     required: true,
   },
   menuPermOptions: {
@@ -90,6 +98,8 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const { checkedRole } = toRefs(props);
 
 const assignPermDialogVisible = computed({
   get() {
@@ -105,12 +115,9 @@ const loading = ref(false);
 const permKeywords = ref("");
 const parentChildLinked = ref(true);
 const isExpanded = ref(true);
-interface CheckedRole {
-  id?: number;
-  name?: string;
-}
+
 // const menuPermOptions = ref<OptionType[]>([]);
-const checkedRole = ref<CheckedRole>({});
+// const checkedRole = ref<CheckedRole>({});
 // const assignPermDialogVisible = ref(false);
 
 /** 分配菜单权限提交 */
@@ -165,6 +172,15 @@ watch(permKeywords, (val) => {
 function handleParentChildLinkedChange(val: any) {
   parentChildLinked.value = val;
 }
+
+function setData(data: number[]) {
+  console.log("setData", data);
+  data.forEach((menuId) => {
+    permTreeRef.value!.setChecked(menuId, true, false);
+  });
+}
+
+defineExpose({ setData });
 </script>
 
 <style scoped lang="scss"></style>
