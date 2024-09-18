@@ -98,6 +98,7 @@
     <role-drawer
       ref="roleDrawerRef"
       v-model:visible="assignPermDialogVisible"
+      :checked-role="checkedRole"
       :menuPermOptions="menuPermOptions"
     />
   </div>
@@ -134,7 +135,6 @@ const queryParams: QueryParams = reactive({
 
 const { pageNum, pageSize } = toRefs(queryParams);
 
-const permTreeRef = ref<InstanceType<typeof ElTree>>();
 const choices = ref<Choices>({
   status: [
     { id: 1, name: "正常" },
@@ -275,16 +275,17 @@ async function handleOpenAssignPermDialog(row: RolePageVO) {
     menuPermOptions.value = await MenuAPI.getOptions();
 
     // 回显角色已拥有的菜单
-    // RoleAPI.getRoleMenuIds(roleId)
-    //   .then((data) => {
-    //     // const checkedMenuIds = data;
-    //     data.forEach((menuId) =>
-    //       permTreeRef.value!.setChecked(menuId, true, false)
-    //     );
-    //   })
-    //   .finally(() => {
-    //     loading.value = false;
-    //   });
+    RoleAPI.getRoleMenuIds(roleId)
+      .then((data) => {
+        roleDrawerRef.value?.setData(data);
+        // const checkedMenuIds = data;
+        // data.forEach((menuId) =>
+        // permTreeRef.value!.setChecked(menuId, true, false)
+        // );
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 }
 
