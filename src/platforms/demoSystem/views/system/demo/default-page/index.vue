@@ -29,6 +29,8 @@
         row-key="id"
         border
         default-expand-all
+        :load="load"
+        lazy
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         @selection-change="handleSelectionChange"
         @sort-change="handleSortChange"
@@ -172,6 +174,21 @@ interface CheckedRole {
   name?: string;
 }
 const checkedRole = ref<CheckedRole>({});
+const load = (row, treeNode, resolve) => {
+  setTimeout(() => {
+    resolve([
+      {
+        id: 399,
+        name: "has_lazy_load_three_in_one",
+        code: "GUEST",
+        status: 1,
+        sort: 3,
+        createTime: "2021-05-26 15:49:05",
+        updateTime: "2019-05-05 16:00:00",
+      },
+    ]);
+  }, 200);
+};
 /** 查询 */
 function handleSearch({ type }: EmitPayload<QueryParams>) {
   console.log("handleQuery-queryParams", type, queryParams);
