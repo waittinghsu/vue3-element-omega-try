@@ -78,6 +78,7 @@ export default defineMock([
             code: "GUEST",
             status: 1,
             sort: 3,
+            hasChildren: true,
             createTime: "2021-05-26 15:49:05",
             updateTime: "2019-05-05 16:00:00",
           },
