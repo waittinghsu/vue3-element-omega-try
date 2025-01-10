@@ -1,4 +1,4 @@
-import vue from "@vitejs/plugin-vue";
+import vue from "@vitejs/plugin-vue"; // 123
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
 import dynamicHtmlPlugin from "./src/plugins/dynamic-html";
