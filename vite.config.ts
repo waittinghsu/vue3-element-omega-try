@@ -1,4 +1,4 @@
-import vue from "@vitejs/plugin-vue"; // 123
+import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
 import dynamicHtmlPlugin from "./src/plugins/dynamic-html";
@@ -31,6 +31,7 @@ const __APP_INFO__ = {
   buildTimestamp: Date.now(),
 };
 const pathSrc = resolve(__dirname, "src");
+const adminSrc = resolve(__dirname, "src/platforms/adminSystem");
 /**  Vite配置 @see https://cn.vitejs.dev/config */
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
@@ -38,6 +39,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   return {
     resolve: {
       alias: {
+        "@adminSystem": adminSrc,
         "@": pathSrc,
       },
     },
