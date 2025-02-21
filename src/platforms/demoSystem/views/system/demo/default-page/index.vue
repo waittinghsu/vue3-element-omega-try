@@ -132,7 +132,7 @@ const queryParams: QueryParams = reactive({
   keywords: "",
   dept: undefined,
   group: undefined,
-  status: undefined,
+  status: -1,
 });
 
 const { pageNum, pageSize } = toRefs(queryParams);
@@ -174,7 +174,7 @@ interface CheckedRole {
   name?: string;
 }
 const checkedRole = ref<CheckedRole>({});
-const load = (row, treeNode, resolve) => {
+const load = (row: any, treeNode: any, resolve: any) => {
   setTimeout(() => {
     resolve([
       {
@@ -209,12 +209,13 @@ function handleSelectionChange(selection: any) {
 }
 
 function handleSortChange(params: any) {
-  handleSearch({ type: QueryType.Search });
   console.log("handleSortChange", params);
+  handleSearch({ type: QueryType.Search });
 }
 
 function handlePageChange(params: any) {
   console.log("handlePageChange", params);
+  handleSearch({ type: QueryType.Search });
 }
 /** 打开角色弹窗 */
 function handleOpenDialog(roleId?: number) {
