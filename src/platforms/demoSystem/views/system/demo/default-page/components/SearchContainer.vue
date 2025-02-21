@@ -19,6 +19,7 @@
               placeholder="请选择状态"
               clearable
             >
+              <el-option :value="-1" label="请选择状态" disabled />
               <el-option
                 v-for="option in choices!.status"
                 :key="option.id"
