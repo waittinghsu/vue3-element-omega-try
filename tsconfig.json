@@ -19,6 +19,7 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
     "paths": {
+      "@adminSystem/*": ["src/platforms/adminSystem/*"],
       "@/*": ["src/*"]
     },
     "types": ["vite/client", "unplugin-icons/types/vue", "element-plus/global"]
