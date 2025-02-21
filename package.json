@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev:demo": "cross-env PLATFORM=demoSystem vite",
-    "dev:cmdb": "cross-env PLATFORM=cmdbSystem vite",
+    "dev:admin": "cross-env PLATFORM=adminSystem vite",
     "build": "vue-tsc --noEmit & vite build",
     "build:demo": "cross-env PLATFORM=demoSystem vue-tsc --noEmit & vite build",
-    "build:cmdb": "cross-env PLATFORM=demoSystem vue-tsc --noEmit & vite build",
+    "build:admin": "cross-env PLATFORM=adminSystem vue-tsc --noEmit & vite build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
