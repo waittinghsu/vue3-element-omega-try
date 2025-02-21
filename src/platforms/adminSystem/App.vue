@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useSettingsStore } from "@/store";
-import defaultSettings from "@/settings";
+import { useAppStore, useSettingsStore } from "@/platforms/adminSystem/store";
+import defaultSettings from "@/platforms/adminSystem/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
 import { SizeEnum } from "@/enums/SizeEnum";
 
