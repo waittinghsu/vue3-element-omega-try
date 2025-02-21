@@ -22,7 +22,7 @@ export interface QueryParams extends PageQuery {
   keywords?: string;
   group?: number | null;
   dept?: number | null;
-  status?: number | null;
+  status?: number;
 }
 /** edit.vue **/
 export type ShowParams<TForm> =
